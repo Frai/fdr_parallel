@@ -1,0 +1,59 @@
+# system configuration
+hadoop_bin=/home/frai/bcc/tcc2/hadoop-2.4.0/bin/hadoop # path to the hadoop executable
+base_path=/home/frai/bcc/tcc2/BoW_package/BoW_package # complete path to the 'BoW_package' folder
+m=5 # number of mappers to be used (set with the number automaticaly defined by Hadoop)
+r=5 # number of reducers to be used
+Sr=0.01 # sampling ratio for SnI
+
+# dataset configuration
+dataset=synthetic_hadoop.dat # dataset name
+dimensionality=15 # dataset dimensionality
+size=100000 # dataset size (total number of points)
+input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
+
+# initial wall-clock time meassurement
+initialTime="$(date +%s)"
+
+# ParC is expected to be the fastest option for this configuration
+echo "Running ParC on dataset $dataset using $r reducers."
+
+cd $base_path/ParC
+make spotless
+make
+
+rm -f dimensionality
+echo $dimensionality > dimensionality
+rm -f size
+echo $size > size
+rm -f divisions
+echo $r > divisions
+
+$hadoop_bin fs -rm -r ParC
+$hadoop_bin fs -mkdir ParC
+
+rm -r -f ../results/$dataset
+mkdir ../results/$dataset
+mkdir ../results/$dataset/output_parallel_$r
+
+$hadoop_bin jar ../myHadoopStreaming.jar -D mapred.task.timeout=0 -mapper mapper -reducer reducer -partitioner org.apache.hadoop.myClasses.myPartitioner -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
+
+$hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
+$hadoop_bin fs -rm -r ParC
+
+# merge
+rm -f $base_path/merge
+g++ -m64 $base_path/merge.cpp -o $base_path/merge
+$base_path/merge ../results/$dataset/output_parallel_$r/ $r 0 $dimensionality
+
+# final wall-clock time meassurement
+totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
+echo $totalTime > ../results/$dataset/output_parallel_$r/time
+
+#cleanup
+make spotless
+rm -f dimensionality
+rm -f size
+rm -f divisions
+rm -f sample
+rm -f part-00000
+rm -f $base_path/merge
