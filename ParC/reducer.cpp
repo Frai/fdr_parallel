@@ -99,35 +99,10 @@ int main(int argc, char **argv) {
 		database = fopen(databaseName,"r"); // opens the database in "r" mode
 
 		// creates an object of the class stFDR
-		stFDR *sCluster = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, (2*numberOfDimensions), -1, alpha, H, 0, 1, 1);
+		stFDR *sCluster = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, (2*numberOfDimensions), -1, H, 1, 1);
 
 		// the database file will not be used anymore, thus close it
 		fclose(database);
-
-		// looks for correlation clusters
-		sCluster->findCorrelationClusters();
-
-		// mounts the result file
-		int numCorrelationClusters = sCluster->getNumCorrelationClusters(), *correlationClustersBelongings = sCluster->getCorrelationClustersBelongings();
-		char **dimCorrelationClusters = sCluster->getDimCorrelationClusters();
-		double **minBetaClusters = sCluster->getMinBetaClusters(), **maxBetaClusters = sCluster->getMaxBetaClusters(),
-		*normalizeSlope = sCluster->getCalcTree()->getNormalizeSlope(),
-		*normalizeYInc = sCluster->getCalcTree()->getNormalizeYInc();
-
-		char aux[1000];
-		for (int i=0; i<numCorrelationClusters; i++) {
-			sprintf(aux,"%d",i);
-			cout << "bounds for beta-cluster " << aux << "\n";
-			for (int j=0; j<numberOfDimensions; j++) {
-				sprintf(aux,"%d",j);
-				cout << "\tdimension " << aux << ": ";
-				sprintf(aux,"%lf",((minBetaClusters[i][j]*normalizeSlope[j])+normalizeYInc[j]));
-				cout << "min, " << aux;
-				sprintf(aux,"%lf",((maxBetaClusters[i][j]*normalizeSlope[j])+normalizeYInc[j]));
-				cout << " max, " << aux << "\n";
-			}
-			cout << "end of description\n\n";
-		}
 
 		// disposes the used structures
 		delete sCluster;
