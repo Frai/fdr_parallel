@@ -95,89 +95,87 @@
 */
 class stCellId {   
 
-   private:
+    private:
+        /**
+        * Vector that is going to be the index in which each bit refers to a dimension.
+        * Possible unused bits will be in the "left side" of index[0].
+        */
+        unsigned char * index; 
 
-      /**
-      * Vector that is going to be the index in which each bit refers to a dimension.
-	  * Possible unused bits will be in the "left side" of index[0].
-      */
-      unsigned char *index; 
+        /**
+        * One position for each 8 dimensions.	  
+        */
+        int nPos;
 
-      /**
-      * One position for each 8 dimensions.	  
-      */
-      int nPos;
+    public:
 
-   public:
+        /**
+        * Constructor
+        *
+        * @param numberOfDimensions Number of dimensions in the database.
+        */
+        stCellId(int numberOfDimensions){		 
+            nPos = (int) ceil((double)numberOfDimensions / 8);
+            index = new unsigned char[nPos];  // one position for each 8 dimensions
+            memset(index, 0, nPos); // clean the used memory
+        }//end stCellId
 
-      /**
-      * Constructor
-	  *
-	  * @param numberOfDimensions Number of dimensions in the database.
-      */
-      stCellId(int numberOfDimensions){		 
-         nPos = (int) ceil((double)numberOfDimensions/8);
-         index = new unsigned char[nPos];  // one position for each 8 dimensions
-         memset(index,0,nPos); // clean the used memory
-      }//end stCellId
+        /**
+        * Destructor
+        */
+        ~stCellId(){         
+            delete[] index;
+        }//end ~stCellId
 
-      /**
-      * Destructor
-      */
-      ~stCellId(){         
-         delete[] index;
-      }//end ~stCellId
+        /**
+        * Gets the value of the bit in position i
+        *
+        * @param i Bit position.
+        * @param numberOfDimensions Number of dimensions in the database.
+        * @return the value of the bit in position i.
+        */
+        char getBitValue(int i, int numberOfDimensions) {		
+            int p; // char that stores the bit i
+            i += (nPos * 8) - numberOfDimensions; // i + number of unused bits
+            for (p = 0; i > 7; i -= 8, p++);	
+            return (index[p] << (i + 24) >> 31);
+        }//end getBitValue
 
-      /**
-      * Gets the value of the bit in position i
-      *
-      * @param i Bit position.
-      * @param numberOfDimensions Number of dimensions in the database.
-	  * @return the value of the bit in position i.
-      */
-      char getBitValue(int i, int numberOfDimensions) {		
-		int p; // char that stores the bit i
-		i += (nPos*8)-numberOfDimensions; // i + number of unused bits
-	    for (p=0; i>7; i-=8,p++);	
-		return (index[p] << (i+24) >> 31);
-      }//end getBitValue
+        /**
+        * Inverts the value of the bit in position i
+        *
+        * @param i Bit position.
+        * @param numberOfDimensions Number of dimensions in the database.
+        */
+        void invertBit(int i, int numberOfDimensions) {	    
+            int p; // char that stores the bit i
+            i += (nPos * 8) - numberOfDimensions; // i + number of unused bits
+            for(p = 0; i > 7; i -= 8, p++);		
+            if(index[p] << (i + 24) >> 31) {		
+                index[p] -= ( 1 << (7 - i) ); // set bit i to 0
+            } else {
+                index[p] += ( 1 << (7 - i) ); // set bit i to 1
+            }//endif
+        }//end invertBit
 
-      /**
-      * Inverts the value of the bit in position i
-      *
-      * @param i Bit position.
-      * @param numberOfDimensions Number of dimensions in the database.
-      */
-      void invertBit(int i, int numberOfDimensions) {	    
-		int p; // char that stores the bit i
-		i += (nPos*8)-numberOfDimensions; // i + number of unused bits
-	    for (p=0; i>7; i-=8,p++);		
-        if (index[p] << (i+24) >> 31) {		
-		  index[p] -= ( 1 << (7-i) ); // set bit i to 0
-        } else {
-          index[p] += ( 1 << (7-i) ); // set bit i to 1
-        }//endif
-      }//end invertBit
+        /**
+        * Operator = assign a value to a variable.
+        *
+        * @param cell The stCellId to be assigned.
+        */
+        void operator = (stCellId &cell) {         
+            memcpy(this->index, (static_cast<stCellId &>(cell)).index, nPos);
+        }//end operator =
 
-      /**
-      * Operator = assign a value to a variable.
-      *
-      * @param cell The stCellId to be assigned.
-      */
-      void operator = (stCellId &cell) {         
-         memcpy(this->index, (static_cast<stCellId &>(cell)).index, nPos);
-      }//end operator =
-
-      /**
-      * Operator == Compare two values.
-      *
-      * @param cell The stCellId to be compared.
-      * @return 0 if equal, <0 if this < cell, >0  if this > cell.
-      */
-      int operator == (stCellId &cell) {         
-         return (memcmp (this->index, (static_cast<stCellId &>(cell)).index, nPos));
-	  }//end operator ==
-
+        /**
+        * Operator == Compare two values.
+        *
+        * @param cell The stCellId to be compared.
+        * @return 0 if equal, <0 if this < cell, >0  if this > cell.
+        */
+        int operator == (stCellId &cell) {         
+            return (memcmp (this->index, (static_cast<stCellId &>(cell)).index, nPos));
+        }//end operator ==
 };
 
 #endif //__STCELLID_H

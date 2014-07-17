@@ -1,15 +1,14 @@
 #include <string.h>
 #include <time.h>
 #include <iostream>
-
 using namespace std;
 
 #ifndef __GNUG__
-#include "stFDR.h"
+	#include "stFDR.h"
 #endif //__GNUG__
 
 #ifdef __GNUG__
-#include "stFDR.cpp"
+	#include "stFDR.cpp"
 #endif //__GNUG__
 
 // default values
@@ -60,7 +59,7 @@ int main(int argc, char **argv) {
 	fclose(dimensionality);
 
 	// first validations
-	if (H < 2) {
+	if(H < 2) {
 		cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
 	}//end if
 
@@ -71,23 +70,25 @@ int main(int argc, char **argv) {
 	FILE *database = fopen(databaseName, "w");
 
 	while(cin) { // reads a point per iteration
-        if (numberOfObjects) {
+        if(numberOfObjects) {
 			cin >> key; // reads the key
         }
        	cin >> point; // reads the point
-       	if (cin) {
+       	if(cin) {
 			int posPoint = 0; char num[1000];
-			for (int j=0; j<numberOfDimensions; j++) {
+			for(int j = 0; j < numberOfDimensions; j++) {
 				int posNum = 0;
-				while (point[posPoint] != '_' && point[posPoint] != 0) {
+				while(point[posPoint] != '_' && point[posPoint] != 0) {
 					num[posNum] = point[posPoint];
-					posNum++; posPoint++;
+					posNum++;
+					posPoint++;
 				}
 				num[posNum] = 0;
 				posPoint++;
 				fputs(num,database);
-				fputs((j==numberOfDimensions-1) ? "\n" : " ",database);
+				fputs((j==numberOfDimensions-1) ? "\n" : " ", database);
 			}//end for
+
 			numberOfObjects++;
 			//cout << key << " " << point << "\n";
        	}
@@ -99,13 +100,16 @@ int main(int argc, char **argv) {
 		database = fopen(databaseName,"r"); // opens the database in "r" mode
 
 		// creates an object of the class stFDR
-		stFDR *sCluster = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, (2*numberOfDimensions), -1, H, 1, 1);
+		stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, (2*numberOfDimensions), -1, H, 1, 1);
+
+		stCountingTreeMap * stCTree = sFDR->getCalcTree();
+		printf("Sum of Points: %d", stCTree->getSumOfPoints());
 
 		// the database file will not be used anymore, thus close it
 		fclose(database);
 
 		// disposes the used structures
-		delete sCluster;
+		delete sFDR;
 	} else {
 		cout << "no point was assigned to this reducer\n";
 	}

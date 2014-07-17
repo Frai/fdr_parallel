@@ -1,6 +1,6 @@
 # system configuration
 hadoop_bin=/home/frai/bcc/tcc2/hadoop-2.4.0/bin/hadoop # path to the hadoop executable
-base_path=/home/frai/bcc/tcc2/BoW_package/BoW_package # complete path to the 'BoW_package' folder
+base_path=/home/frai/bcc/tcc2/fdr_parallel/fdr_parallel # complete path to the 'BoW_package' folder
 m=5 # number of mappers to be used (set with the number automaticaly defined by Hadoop)
 r=5 # number of reducers to be used
 Sr=0.01 # sampling ratio for SnI
@@ -40,11 +40,6 @@ $hadoop_bin jar ../myHadoopStreaming.jar -D mapred.task.timeout=0 -mapper mapper
 $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
 $hadoop_bin fs -rm -r ParC
 
-# merge
-rm -f $base_path/merge
-g++ -m64 $base_path/merge.cpp -o $base_path/merge
-$base_path/merge ../results/$dataset/output_parallel_$r/ $r 0 $dimensionality
-
 # final wall-clock time meassurement
 totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
 echo $totalTime > ../results/$dataset/output_parallel_$r/time
@@ -56,4 +51,3 @@ rm -f size
 rm -f divisions
 rm -f sample
 rm -f part-00000
-rm -f $base_path/merge

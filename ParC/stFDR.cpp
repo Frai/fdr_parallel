@@ -186,7 +186,6 @@ void stFDR::walkThroughConvolution(int level) {
     }//end for
     
     int biggestConvolutionValue = -MAXINT;
-    betaClusterCenter = 0;
     // iniciate the recursive process to analyze a level
     walkThroughConvolutionRecursive(calcTree->getRoot(), parentsVector, level, 0,
                                     &biggestConvolutionValue);
@@ -208,59 +207,6 @@ void stFDR::walkThroughConvolutionRecursive(stNode * node, stCell ** nodeParents
                 walkThroughConvolutionRecursive(iter->second->nextLevel, nodeParents, level,
                                                 (currentLevel + 1), biggestConvolutionValue);
             }//end for
-        } else { // this is the level to be analyzed
-            int newConvolutionValue;
-            char clusterFoundBefore;
-            double * maxCell = new double[numberOfDimensions];
-            double * minCell = new double[numberOfDimensions];
-            for(iter = m->begin(); iter != m->end(); iter++) {
-                // Does not analyze cells analyzed before and cells that can't be the biggest convolution center.
-                // It speeds up the algorithm, specially when neighbourhoodConvolutionValue <= 0
-                if((!iter->second->getUsedCell()) && ((neighbourhoodConvolutionValue > 0) ||
-                   ((iter->second->getSumOfPoints() * centralConvolutionValue) >
-                    *biggestConvolutionValue))) {
-                    // discovers the position of cell in the data space
-                    cellPosition(iter->second, nodeParents, minCell, maxCell, level);
-                    // verifies if this cell belongs to a cluster found before
-                    clusterFoundBefore = 0;
-                    for(int i = 0; !clusterFoundBefore && i < numBetaClusters; i++) {
-                        clusterFoundBefore = 1;
-                        for(int j = 0; clusterFoundBefore && j < numberOfDimensions; j++) {
-                            // Does not cut off cells in a level upper than the level where a cluster was found
-                            if(!(maxCell[j] <= maxBetaClusters[i][j] &&
-                                 minCell[j] >= minBetaClusters[i][j])) {
-                                clusterFoundBefore = 0;
-                            }//end if
-                        }//end for
-                    }//end for
-
-                    if(!clusterFoundBefore) { // the cell doesn't belong to any found cluster
-                        // applies the convolution matrix to cell
-                        if(neighbourhoodConvolutionValue) {
-                            newConvolutionValue = applyConvolution(iter->second, nodeParents,
-                                                                   currentLevel);
-                        } else {
-                            newConvolutionValue = centralConvolutionValue *
-                                                                (iter->second->getSumOfPoints());
-                            // when the   neighbourhood weight is zero
-                        }//end if
-
-                        if(newConvolutionValue > *biggestConvolutionValue) {
-                            // until now, cell is the biggest convolution value
-                            *biggestConvolutionValue = newConvolutionValue;
-                            betaClusterCenter = iter->second;
-
-                            for (int j=0 ; j<currentLevel ; j++) {
-                                betaClusterCenterParents[j] = nodeParents[j];
-                            }//end for
-
-                        }//end if
-                    }//end if
-                }//end if        
-            }//end while
-            // disposes minCell and maxCell
-            delete [] minCell;
-            delete [] maxCell;
         }//end if
     }//end if
 }//end stFDR::walkThroughConvolutionRecursive

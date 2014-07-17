@@ -7,39 +7,40 @@
 class stNode; //informs that the class exists
 
 class stCell {
-   public:
-      stCell(int dimensionality) {
-		 sumOfPoints = 0;
-		 nextLevel = 0;
-		 id = 0;
-      }
+    public:
+        stCell(int dimensionality) {
+            sumOfPoints = 0;
+            nextLevel = 0;
+            id = 0;
+        }
 
-      ~stCell() {
-		 if (nextLevel) {
-			//delete nextLevel;
-		 }
-      }
+        ~stCell() {
+            if(nextLevel) {
+                //delete nextLevel;
+            }
+        }
 
-	  void insertPoint() {
-	     sumOfPoints++;
-	  }
+        void insertPoint() {
+            sumOfPoints++;
+        }
 
-	  int getSumOfPoints() {
-	     return sumOfPoints;
-	  }
+        int getSumOfPoints() {
+            return sumOfPoints;
+        }
 
-	  stCellId *getId() {
-	     return id;
-	  }
+        stCellId * getId() {
+            return id;
+        }
 
-	  void setId(stCellId *id) {
-	     this->id = id;
-	  }
+        void setId(stCellId * id) {
+            this->id = id;
+        }
 
-      stNode *nextLevel;
-   private:
-      int sumOfPoints;
-	  stCellId *id;
+        stNode * nextLevel;
+
+    private:
+        int sumOfPoints;
+        stCellId * id;
 };
 
 #endif //__STCELL_H
