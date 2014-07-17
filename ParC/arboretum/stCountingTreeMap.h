@@ -123,8 +123,6 @@ class stCountingTreeMap {
                             // half regarding i
                         }
                     }
-                } else { // updates in the father (currentLevel-1 > 0)
-                    father->insertPointPartial(cellId,dimensionality);
                 }
 
                 delete cellId;
