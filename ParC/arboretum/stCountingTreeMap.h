@@ -14,18 +14,18 @@ class stCountingTreeMap {
             sumOfPoints = 0;
             normalizeSlope = new double[dimensionality];
             normalizeYInc = new double[dimensionality];
-            P = new int[dimensionality];
+            // P = new int[dimensionality];
             for (int i = 0; i < dimensionality; i++) {
                 normalizeSlope[i] = 1;
                 normalizeYInc[i] = 0;
-                P[i]=0;
+            //     P[i]=0;
             }
         }
 
         ~stCountingTreeMap() {
             delete [] normalizeSlope;
             delete [] normalizeYInc;
-            delete [] P;
+            // delete [] P;
             if (root) {
                 delete root;
             }
@@ -74,9 +74,9 @@ class stCountingTreeMap {
             return sumOfPoints;
         }
 
-        int *getP() {
-            return P;
-        }
+        // int *getP() {
+        //     return P;
+        // }
 
         stCell *findInNode(stCell *father, stCellId *sonsId) {
             return (father)?father->nextLevel->findInNode(sonsId):root->findInNode(sonsId);
@@ -116,21 +116,21 @@ class stCountingTreeMap {
                 // and returns the corresponding cell
 
                 // updates the half space counts in level currentLevel-1
-                if (!father) { // updates in the root (currentLevel-1 == 0)
-                    for (int i=0; i<dimensionality; i++) {
-                        if (!cellId->getBitValue(i,dimensionality)) {
-                            P[i]++; // counts the point, since it is in the root's lower
-                            // half regarding i
-                        }
-                    }
-                }
+                // if (!father) { // updates in the root (currentLevel-1 == 0)
+                //     for (int i=0; i<dimensionality; i++) {
+                //         if (!cellId->getBitValue(i,dimensionality)) {
+                //             P[i]++; // counts the point, since it is in the root's lower
+                //             // half regarding i
+                //         }
+                //     }
+                // }
 
                 delete cellId;
                 insertPointRecursive(currentLevel+1,&cell->nextLevel,min,max,point,cell);
             }
         }
 
-        int *P;
+        // int *P;
         int sumOfPoints;
         int dimensionality;
         int H;

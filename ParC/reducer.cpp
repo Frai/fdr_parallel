@@ -103,7 +103,12 @@ int main(int argc, char **argv) {
 		stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, (2*numberOfDimensions), -1, H, 1, 1);
 
 		stCountingTreeMap * stCTree = sFDR->getCalcTree();
-		printf("Sum of Points: %d", stCTree->getSumOfPoints());
+		printf("Sum of Points: %d\n", stCTree->getSumOfPoints());
+		double *pdYInc = stCTree->getNormalizeYInc();
+		double *pdSlope = stCTree->getNormalizeSlope();
+		for(int i = 0; i < numberOfDimensions; i++) {
+			printf("i: %d - YInc: %lf - Slope: %lf\n", i, pdYInc[i], pdSlope[i]);
+		}
 
 		// the database file will not be used anymore, thus close it
 		fclose(database);
