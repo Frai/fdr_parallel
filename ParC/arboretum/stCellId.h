@@ -127,6 +127,10 @@ class stCellId {
             delete[] index;
         }//end ~stCellId
 
+        unsigned char * getIndex() {
+            return index;
+        }
+
         /**
         * Gets the value of the bit in position i
         *

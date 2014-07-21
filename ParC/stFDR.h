@@ -113,14 +113,11 @@ class stFDR {
         * @param numberOfDimensions Number of dimensions in the database.
         * @param normalizeFactor Determines how data will be normalized.
         * @param numberOfObjects Number of objects in the database.
-        * @param centralConvolutionValue Determines the central weight in the convolution matrix.
-        * @param neighbourhoodConvolutionValue Determines the face neighbours weight in the convolution matrix.
         * @param H The number of grid levels to build the counting tree.
         *
         */
         stFDR(double ** objectsArray, FILE * database, int numberOfDimensions,
               int normalizeFactor, int numberOfObjects,
-              int centralConvolutionValue, int neighbourhoodConvolutionValue,
               int H, int initialLevel, char memory);
 
         /**
@@ -164,138 +161,6 @@ class stFDR {
         int H;
 
         int initialLevel;
-
-        /**
-        * Vectors used when discovering relevant attributes.
-        */
-        double *attributesRelevance;      
-
-        /**
-        * Defines the convolution matrix (center and direct neighbours).
-        */
-        int centralConvolutionValue;
-        int neighbourhoodConvolutionValue;
-
-        /**
-        * Calculates the cThreshold based on the Minimun Description Length (MDL) method.
-        *
-        * @param attributesRelevance Vector with the calculed relevances of each attribute.
-        *
-        */
-        double calcCThreshold(double *attributesRelevance);
-
-        /**
-        * Finds the best cut point position based on the MDL method.
-        *
-        * @param sortedRelevance Vector with the sorted relevances of each attribute.
-        *
-        */
-        int minimumDescriptionLength(double *sortedRelevance);
-
-        /**
-        * Starts a walk through the counting tree applying the convolution matrix
-        * to each cell in a defined level.
-        *
-        * @param level The counting tree level to be analyzed.
-        *
-        */
-        void walkThroughConvolution(int level);
-
-        /**
-        * Performs a recursive walk through the counting tree applying the convolution matrix
-        * to each cell in a defined level.
-        *
-        * @param cell Current cell in the walk.
-        * @param cellParents Vector with the current cell parents.
-        * @param level The level to be analyzed in the counting tree.
-        * @param currentLevel The current cell level in the counting tree.
-        * @param biggestConvolutionValue The biggest convolution value already found in the
-        *         analysis.
-        *
-        */
-        void walkThroughConvolutionRecursive(stNode * node,
-                                             stCell ** nodeParents,
-                                             int level, int currentLevel,
-                                             int * biggestConvolutionValue);
-
-        /**
-        * Applies the convolution matrix to a grid cell.
-        *
-        * @param cell The grid cell to apply the convolution matrix.
-        * @param cellParents The cell parents.
-        * @param level The cell level in the counting tree.
-        *
-        */
-        int applyConvolution(stCell * cell, stCell ** cellParents, int level);
-
-        /**
-        * Finds the position of a cell in the data space.
-        *
-        * @param cell The analyzed cell.
-        * @param cellParents The cell parents.
-        * @param min Vector to receive the minimum position limits of cell in each dimension.
-        * @param max Vector to receive the maximum position limits of cell in each dimension.
-        * @param level The level of cell in the counting tree.
-        *
-        */
-        char cellPosition(stCell * cell, stCell ** cellParents, 
-                          double * min, double * max, int level);
-
-        /**
-        * Finds the position of a cell in the data space, regarding a dimension e_j.
-        *
-        * @param cell The analyzed cell.
-        * @param cellParents The cell parents.
-        * @param min The minimum position limit of cell in dimension e_j.
-        * @param max The maximum position limit of cell in dimension e_j.
-        * @param level The level of cell in the counting tree.
-          * @param j The dimension to be considered.
-        *
-        */
-        char cellPositionDimensionE_j(stCell * cell, stCell ** cellParents,
-                                      double * min, double * max, int level, int j);
-
-        /**
-        * Finds the external face neighbour of cell in a determined dimension.
-        *
-        * @param dimIndex The dimension to look for the neighbour.
-        * @param cell The analyzed cell.
-        * @param cellParents Vector with the cell parents.
-        * @param neighbourParents Vector to receive the found neighbour parents.
-        * @param level The level of cell in the counting tree.
-        *
-        */
-        stCell *externalNeighbour(int dimIndex, stCell *cell,
-                                  stCell **cellParents,
-                                  stCell **neighbourParents, int level);
-
-        /**
-        * Finds the internal face neighbour of cell in a determined dimension.
-        *
-        * @param dimIndex The dimension to look for the neighbour.
-        * @param cell The analyzed cell.
-        * @param father The father of cell.
-        *
-        */
-        stCell *internalNeighbour(int dimIndex, stCell *cell, stCell *father);
-
-        /**
-        * compare function used by the qsort.
-        *
-        * @param a first double element.
-        * @param b second double element.
-        *
-        */
-        static int compare (const void *a, const void *b) {	     
-              if(*(double*)a > *(double*)b) {
-                    return 1;
-              } else {	
-                    if(*(double*)a < *(double*)b) {
-                          return -1;
-                    }//end if
-              }//end if
-              return 0;
-        }//end compare
 
         /**
         * Normalize data points and insert them in the counting tree.

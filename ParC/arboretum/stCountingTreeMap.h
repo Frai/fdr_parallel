@@ -14,18 +14,15 @@ class stCountingTreeMap {
             sumOfPoints = 0;
             normalizeSlope = new double[dimensionality];
             normalizeYInc = new double[dimensionality];
-            // P = new int[dimensionality];
             for (int i = 0; i < dimensionality; i++) {
                 normalizeSlope[i] = 1;
                 normalizeYInc[i] = 0;
-            //     P[i]=0;
             }
         }
 
         ~stCountingTreeMap() {
             delete [] normalizeSlope;
             delete [] normalizeYInc;
-            // delete [] P;
             if (root) {
                 delete root;
             }
@@ -50,7 +47,7 @@ class stCountingTreeMap {
             if (!out) { // if the point is valid
                 sumOfPoints++; // counts this point in level 0
                 // recursively counts this point in all levels deeper than level 0
-                insertPointRecursive(1, &root, min, max, normPoint, 0);
+                insertPointRecursive(1, &root, min, max, normPoint);
             }//end if
 
             delete [] min;
@@ -74,10 +71,6 @@ class stCountingTreeMap {
             return sumOfPoints;
         }
 
-        // int *getP() {
-        //     return P;
-        // }
-
         stCell *findInNode(stCell *father, stCellId *sonsId) {
             return (father)?father->nextLevel->findInNode(sonsId):root->findInNode(sonsId);
         }
@@ -90,8 +83,8 @@ class stCountingTreeMap {
         }
 
     private:
-        void insertPointRecursive(int currentLevel, stNode **pPCN, double *min,
-                                  double *max, double *point, stCell *father) {
+        void insertPointRecursive(int currentLevel, stNode **pPCN,
+                                  double *min, double *max, double *point) {
             if (currentLevel < H) {
                 // mounts the id of the cell that covers normPoint in the current level
                 // and stores in min/max this cell's lower and upper bounds
@@ -115,22 +108,11 @@ class stCountingTreeMap {
                 stCell *cell = (*pPCN)->insertPoint(cellId,dimensionality); // inserts the point
                 // and returns the corresponding cell
 
-                // updates the half space counts in level currentLevel-1
-                // if (!father) { // updates in the root (currentLevel-1 == 0)
-                //     for (int i=0; i<dimensionality; i++) {
-                //         if (!cellId->getBitValue(i,dimensionality)) {
-                //             P[i]++; // counts the point, since it is in the root's lower
-                //             // half regarding i
-                //         }
-                //     }
-                // }
-
                 delete cellId;
-                insertPointRecursive(currentLevel+1,&cell->nextLevel,min,max,point,cell);
+                insertPointRecursive(currentLevel+1,&cell->nextLevel,min,max,point);
             }
         }
 
-        // int *P;
         int sumOfPoints;
         int dimensionality;
         int H;
