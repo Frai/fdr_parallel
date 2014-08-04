@@ -51,6 +51,7 @@ totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
 echo $totalTime > ../results/$dataset/output_parallel_$r/time
 
 #cleanup
+echo "Cleaning..."
 make spotless
 rm -f dimensionality
 rm -f size

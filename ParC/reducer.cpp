@@ -29,83 +29,8 @@ void initClock() {
  * Prints the elapsed time.
  */
 void printElapsed() {
-	printf("Elapsed time: %0.3lf sec.\n",(double)(clock()-startTime)/CLOCKS_PER_SEC);
+	printf("Elapsed time: %0.3lf sec.\n", (double) (clock() - startTime) / CLOCKS_PER_SEC);
 }//end printElapsed
-
-const char * byte_to_binary(const unsigned char x) {
-	static char b[9];
-	b[0] = '\0';
-
-	int z;
-	for(z = 256; z > 0; z >>= 1) {
-		strcat(b, ((x & z) == z) ? "1" : "0");
-	}
-
-	return b;
-}
-
-void printTree(stNode * pNode, int level) {
-	map<stCellId*, stCell*, myCoparisson> * pmCell = pNode->getRoot();
-	map<stCellId*, stCell*, myCoparisson>::iterator iter;
-	stNode * pAuxNode;
-	stCell * pCell;
-
-	while(level--) {
-		for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
-			pCell = iter->second;
-			pAuxNode = pCell->nextLevel;
-			printTree(pAuxNode, level);
-		}
-	}
-
-	if(pNode) {
-		stCellId * pCellId;
-		int data = 0;
-		for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
-			pCellId = iter->first;
-			pCell = iter->second;
-			data++;
-			printf("data: %d - %d ", data, pCell->getSumOfPoints());
-			unsigned char * index = pCellId->getIndex();
-			for(int i = 0; i < sizeof(index) / sizeof(index[0]); i++) {
-				printf("%s ", byte_to_binary(index[i]));
-			}
-			printf("\n");
-		}
-	}
-}
-
-void printTreeRecursive(stNode * pNode, double level) {
-	if(pNode) {
-		map<stCellId*, stCell*, myCoparisson> * pmCell = pNode->getRoot();
-		map<stCellId*, stCell*, myCoparisson>::iterator iter;
-		stCellId * pCellId;
-		stCell * pCell;
-		int data = 0;
-		double r = log(level);
-		double S = 0;
-		double logS;
-		for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
-			pCellId = iter->first;
-			pCell = iter->second;
-			data++;
-			// printf("data: %d - %d ", data, pCell->getSumOfPoints());
-			// unsigned char * index = pCellId->getIndex();
-			// for(int i = 0; i < sizeof(index) / sizeof(index[0]); i++) {
-			// 	printf("%s ", byte_to_binary(index[i]));
-			// }
-			// printf("\n");
-
-			S += pow(pCell->getSumOfPoints(), 2);
-
-			printTreeRecursive(pCell->nextLevel, pow(level, 2));
-		}
-
-		logS = log(S);
-
-		printf("level: %lf, logR: %lf, S: %lf, logS: %lf\n", level, r, S, logS);
-	}
-}
 
 /**
  * Initiates the clustering process.
@@ -186,7 +111,7 @@ int main(int argc, char **argv) {
 			printf("i: %d - YInc: %lf - Slope: %lf\n", i, pdYInc[i], pdSlope[i]);
 		}
 
-		printTreeRecursive(pCTree->getRoot(), 0.5);
+		pCTree->printTreeRecursive(pCTree->getRoot(), 0.5);
 
 		// the database file will not be used anymore, thus close it
 		fclose(database);
@@ -198,7 +123,7 @@ int main(int argc, char **argv) {
 	}
 
 	//delete the temporary data file
-	sprintf(rm_cmd,"rm -f %s",databaseName);
+	sprintf(rm_cmd, "rm -f %s", databaseName);
 	system(rm_cmd);
 
 	printElapsed(); // prints the elapsed time
