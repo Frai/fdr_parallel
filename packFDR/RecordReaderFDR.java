@@ -33,19 +33,16 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
     @Override
     public LongWritable createKey() {
         return new LongWritable();
-
     }
 
     @Override
     public Text createValue() {
         return new Text("");
-
     }
 
     @Override
     public float getProgress() throws IOException {
         return lineRecord.getPos();
-
     }
 
     @Override
@@ -55,11 +52,12 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
         byte space[] = {' '};
         value.clear();
         gotsomething = false;
+
         do {
             appended = false;
             retval = lineRecord.next(lineKey, lineValue);
-            if (retval) {
-                if (lineValue.toString().length() > 0) {
+            if(retval) {
+                if(lineValue.toString().length() > 0) {
                     byte[] rawline = lineValue.getBytes();
                     int rawlinelen = lineValue.getLength();
                     value.append(rawline, 0, rawlinelen);
@@ -68,9 +66,8 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
                 }
                 gotsomething = true;
             }
-        } while (appended);
+        } while(appended);
 
-        //System.out.println("ParagraphRecordReader::next() returns "+gotsomething+" after setting value to: ["+value.toString()+"]");
         return gotsomething;
     }
 

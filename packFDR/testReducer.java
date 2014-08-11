@@ -24,7 +24,7 @@ public class testReducer implements Reducer<Text, IntWritable, Text, IntWritable
             throws IOException {
         int count = 0;
         while(iter.hasNext()) {
-            count += iter.next().get();
+            count++ ;
         }
         System.out.println(count);
     }

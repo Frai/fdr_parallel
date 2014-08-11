@@ -23,8 +23,7 @@ public class testMapper implements Mapper<LongWritable, Text, Text, IntWritable>
         String lines = value.toString();
         String []lineArr = lines.split("\n");
         int lcount = lineArr.length;
-        // context.write(new Text(new Integer(lcount).toString()),new IntWritable(1));
-        System.out.println(key + " - " + value);
+        System.out.println(key + " : " + value);
     }
 
     public void configure(JobConf job) {
