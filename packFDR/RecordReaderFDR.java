@@ -49,7 +49,7 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
     public synchronized boolean next(LongWritable key, Text value) throws IOException {
         boolean appended, gotsomething;
         boolean retval;
-        byte space[] = {' '};
+        byte space[] = {'\n'};
         value.clear();
         gotsomething = false;
 

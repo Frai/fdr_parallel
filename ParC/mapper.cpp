@@ -14,70 +14,80 @@ using namespace std;
     #include "stFDR.cpp"
 #endif //__GNUG__
 
+// default values
+#define NORMALIZE_FACTOR 0 // Independent
+
 int main(int argc, char **argv) {
-    char point[10000]; // one point
-    char num[100]; // one value
-    int dim = 0; // data dimensionality
-    long s = 0; // data size
-    int div = 0; // desired number of data divisions
-    long pointId = 0; // point identifier
+    int numberOfDimensions = 0;
+    int H = 0;
+    double alpha = 0.0;
+    char num[1000];
+    char point[10000];
+    char key[1000];
+    char databaseName[1000]; 
+    char rm_cmd[1000];
+    long pointId = 0;
+
+    // reads the input parameters
+    FILE *parameters;
+    parameters = fopen("parameters", "r");
+    fscanf(parameters, "%lf", &alpha);
+    fscanf(parameters, "%d", &H);
+    fclose(parameters);
 
     // reads the data dimensionality
-    FILE * dimensionality;
+    FILE *dimensionality;
     dimensionality = fopen("dimensionality", "r");
-    fscanf(dimensionality, "%d", &dim);
+    fscanf(dimensionality, "%d", &numberOfDimensions);
     fclose(dimensionality);
 
-    // // reads the data size
-    // FILE * size;
-    // size = fopen("size", "r");
-    // fscanf(size, "%ld", &s);
-    // fclose(size);
+    // first validations
+    if(H < 2) {
+        cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
+    } // end if
 
-    // // reads the desired number of data divisions
-    // FILE * divisions;
-    // divisions = fopen("divisions", "r");
-    // fscanf(divisions, "%d", &div);
-    // fclose(divisions);
-
-    // int numberOfObjects = 0;
-
-
-    // while(cin) { // reads one line per iteration
-    //     cin >> num; // point identifier
-    //     pointId = atol(num);
-
-    //     cin >> point; // first value
-    //     for(int i = 1; i < dim; i++) {
-    //         cin >> num; // other values
-    //         strcat(point, "_");
-    //         strcat(point, num);
-    //     }
-
-    //     cin >> num; // discarts the ground truth
-    //     if(cin) { //  outputs the point with the appropriate key
-    //          // file position based data division
-    //         sprintf(num, "%d", ((int) floor(pointId / ceil((double) (s + 1) / div))));
-    //         cout << num << "\t" << point << "\n";
-    //     }
-    // }
+    // reads objects from the source database
+    int numberOfObjects = 0;
+    cin >> key; // key from Record reader split
+    sprintf(databaseName, "database_%s.dat", key);
+    FILE *database = fopen(databaseName, "w");
 
     while(cin) {
-        cin >> num;
-        pointId = atol(num);
+        cin >> num; // pointId discarded
 
-        cin >> point;
-        for(int i = 1; i < dim; i++) {
-            cin >> num;
-            strcat(point, "_");
+        cin >> point; // first value
+        for(int i = 1; i < numberOfDimensions; i++) {
+            cin >> num; // point values
+            strcat(point, " ");
             strcat(point, num);
         }
-        cin >> num;
-        if(cin) {
-            sprintf(num, "%d", ((int) floor(pointId / ceil((double) (s + 1) / div))));
-            cout << num << "\t" << point << "\n";
-        }
-    }
+        strcat(point, "\n");
+        fputs(point, database);
+
+        cin >> num; // discards the ground truth
+        numberOfObjects++;
+    } // end while
+
+    fclose(database); // closes the database in "w" mode
+
+    if(numberOfObjects) {
+        database = fopen(databaseName, "r"); // opens the database in "r" mode
+
+        // creates an object of the class stFDR
+        stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, H, 1, 1);
+
+        stCountingTreeMap * pCTree = sFDR->getCalcTree();
+        pCTree->printTreeRecursive(pCTree->getRoot(), 0.5);
+
+        fclose(database); // the database file will not be used anymore, thus close it
+        delete sFDR; // disposes the used structures
+    } else {
+        cout << "0\t0\n"; // no point was assigned to this mapper
+    } // end if
+
+    //delete the temporary data file
+    // sprintf(rm_cmd, "rm -f %s", databaseName);
+    // system(rm_cmd);
 
     return 0; // success
 }

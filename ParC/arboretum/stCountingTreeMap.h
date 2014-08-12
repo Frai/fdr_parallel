@@ -131,30 +131,16 @@ class stCountingTreeMap {
                 map<stCellId*, stCell*, myCoparisson>::iterator iter;
                 stCellId * pCellId;
                 stCell * pCell;
-                int data = 0;
-                double r = log(level);
-                double S = 0;
-                double logS;
+
                 for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
                     pCellId = iter->first;
                     pCell = iter->second;
-                    data++;
-                    // printf("data: %d - %d ", data, pCell->getSumOfPoints());
-                    // unsigned char * index = pCellId->getIndex();
-                    // for(int i = 0; i < sizeof(index) / sizeof(index[0]); i++) {
-                    //  printf("%s ", byte_to_binary(index[i]));
-                    // }
-                    // printf("\n");
-
-                    S += pow(pCell->getSumOfPoints(), 2);
-
                     printTreeRecursive(pCell->nextLevel, pow(level, 2));
-                }
-
-                logS = log(S);
-
-                printf("level: %lf, logR: %lf, S: %lf, logS: %lf\n", level, r, S, logS);
-            }
+                    cout << pCellId->getIndex() << "\t" << pCell->getSumOfPoints() << "\n";
+                } // end for
+            } else {
+                cout << "0\t0\n";
+            } // end if
         }
 
     private:
