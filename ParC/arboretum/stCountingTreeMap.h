@@ -126,6 +126,7 @@ class stCountingTreeMap {
         }
 
         void printTreeRecursive(stNode * pNode, double level) {
+            char indexVal[1000];
             if(pNode) {
                 map<stCellId*, stCell*, myCoparisson> * pmCell = pNode->getRoot();
                 map<stCellId*, stCell*, myCoparisson>::iterator iter;
@@ -136,7 +137,14 @@ class stCountingTreeMap {
                     pCellId = iter->first;
                     pCell = iter->second;
                     printTreeRecursive(pCell->nextLevel, pow(level, 2));
-                    cout << pCellId->getIndex() << "\t" << pCell->getSumOfPoints() << "\n";
+
+                    unsigned char * index = pCellId->getIndex();
+                    strcpy(indexVal, "");
+                    for(int i = 0; i < sizeof(index) / sizeof(index[0]); i++) {
+                        strcat(indexVal, byte_to_binary(index[i]));
+                    }
+
+                    cout << indexVal << "\t" << pCell->getSumOfPoints() << "\n";
                 } // end for
             } else {
                 cout << "0\t0\n";

@@ -37,11 +37,11 @@ mkdir -p ../results/$dataset/output_parallel_$r
 
 echo "Running Hadoop..."
 #$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper packFDR.testMapper -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
-$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
+$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
 echo "Finished"
 
-# $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
-# $hadoop_bin fs -rm -r ParC
+$hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
+$hadoop_bin fs -rm -r ParC
 
 # final wall-clock time meassurement
 totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
@@ -50,8 +50,8 @@ echo $totalTime > ../results/$dataset/output_parallel_$r/time
 #cleanup
 echo "Cleaning..."
 make spotless
-# rm -f dimensionality
-# rm -f size
-# rm -f divisions
-# rm -f sample
-# rm -f part-00000
+rm -f dimensionality
+rm -f size
+rm -f divisions
+rm -f sample
+rm -f part-00000
