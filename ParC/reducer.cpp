@@ -40,14 +40,15 @@ void printElapsed() {
  * @return success (0), error (1).
  */
 int main(int argc, char **argv) {
-	int H = 0, numberOfDimensions = 0;
+	int H = 0;
+	int numberOfDimensions = 0;
 	double alpha = 0;
-	char point[10000], key[1000], databaseName[1000], rm_cmd[1000];
+	int aux;
+
+	map<char*, int> m;
 
 	char cellId[10000];
 	int sum;
-
-	// initClock(); // initiates the meassurement of run time
 
 	// reads the input parameters
 	FILE *parameters;
@@ -62,22 +63,32 @@ int main(int argc, char **argv) {
 	fscanf(dimensionality,"%d",&numberOfDimensions);
 	fclose(dimensionality);
 
-	// first validations
-	if(H < 2) {
+	if(H < 2) { // first validations
 		cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
-	}//end if
+	} // end if
 
 	while(cin) {
 		cin >> cellId;
 		cin >> sum;
 
-		cout << "id: " << cellId << " sum: " << sum << "\n";
-	}
-	//delete the temporary data file
-	sprintf(rm_cmd, "rm -f %s", databaseName);
-	system(rm_cmd);
+		if(sum > 0) {
+			cout << cellId << " ";
+			if(m.find(cellId) == m.end()) {
+				m.insert(pair<char*, int>(cellId, sum));
+				cout << sum << "\n";
+			} else {
+				aux = m[cellId] + sum;
+				m.erase(cellId);
+				m.insert(pair<char*, int>(cellId, aux));
+				cout << sum << "\n";
+			} // end if	
+		} // end if
+	} // end while
 
-	// printElapsed(); // prints the elapsed time
+	// map<char*, int>::iterator it;
+	// for(it = m.begin(); it != m.end(); it++) {
+	// 	cout << "key: " << it->first << " sum: " << it->second << "\n";
+	// }
 
 	return 0; // success
 }
