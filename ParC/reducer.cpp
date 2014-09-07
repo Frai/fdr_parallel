@@ -70,25 +70,29 @@ int main(int argc, char **argv) {
 	while(cin) {
 		cin >> cellId;
 		cin >> sum;
-
-		if(sum > 0) {
-			cout << cellId << " ";
-			if(m.find(cellId) == m.end()) {
-				m.insert(pair<char*, int>(cellId, sum));
-				cout << sum << "\n";
-			} else {
-				aux = m[cellId] + sum;
-				m.erase(cellId);
-				m.insert(pair<char*, int>(cellId, aux));
-				cout << sum << "\n";
-			} // end if	
-		} // end if
+	
+		if(m.find(cellId) == m.end()) {
+			cout << "new " << cellId << " " << sum << "\n";
+			m[cellId] = sum;
+		} else {
+			cout << "old " << cellId << " " << m[cellId] << "\n";
+			aux = m[cellId] + sum;
+			m.erase(cellId);
+			m[cellId] = aux;
+		} // end if	
 	} // end while
 
-	// map<char*, int>::iterator it;
-	// for(it = m.begin(); it != m.end(); it++) {
-	// 	cout << "key: " << it->first << " sum: " << it->second << "\n";
-	// }
+	map<char*, int>::iterator it;
+	for(it = m.begin(); it != m.end(); it++) {
+		aux = 0;
+		for(int i = 0; i < strlen(it->first); i++) {
+			if((it->first)[i] == '1') {
+				aux++;
+			}
+		}
+
+		cout << log(aux) << "\t" << log(it->second) << "\n";
+	}
 
 	return 0; // success
 }

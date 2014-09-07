@@ -1,18 +1,23 @@
 # system configuration
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-m=3 # number of mappers to be used (set with the number automaticaly defined by Hadoop)
-r=3 # number of reducers to be used
-Sr=0.01 # sampling ratio for SnI
+m=5 # number of mappers to be used (set with the number automatically defined by Hadoop)
+r=5 # number of reducers to be used
 
-# dataset configuration
+# dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
 dimensionality=15 # dataset dimensionality
 size=100000 # dataset size (total number of points)
+
+# dataset 2 configuration
+# dataset=synthetic_hadoop_2.dat # dataset name
+# dimensionality=1 # dataset dimensionality
+# size=2 # dataset size (total number of points)
+
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
 # initial wall-clock time meassurement
-initialTime="$(date +%s)"
+# initialTime="$(date +%s)"
 
 echo "Compiling jar..."
 javac packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java packFDR/testMapper.java packFDR/testReducer.java packFDR/PartitionerFDR.java -cp hadoop-core-1.2.1.jar
@@ -36,7 +41,6 @@ rm -r -f ../results/$dataset
 mkdir -p ../results/$dataset/output_parallel_$r
 
 echo "Running Hadoop..."
-#$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper packFDR.testMapper -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
 $hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -partitioner packFDR.PartitionerFDR -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
 echo "Finished"
 
@@ -44,8 +48,8 @@ $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
 $hadoop_bin fs -rm -r ParC
 
 # final wall-clock time meassurement
-totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
-echo $totalTime > ../results/$dataset/output_parallel_$r/time
+# totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
+# echo $totalTime > ../results/$dataset/output_parallel_$r/time
 
 #cleanup
 echo "Cleaning..."

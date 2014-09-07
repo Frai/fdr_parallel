@@ -11,7 +11,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.fs.*;
 
 public class InputFormatFDR extends FileInputFormat {
-
     @Override
     public RecordReader<LongWritable, Text> getRecordReader(InputSplit split, JobConf conf,
             Reporter reporter) throws IOException {

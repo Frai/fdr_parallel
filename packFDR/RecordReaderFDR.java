@@ -42,7 +42,7 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
 
     @Override
     public float getProgress() throws IOException {
-        return lineRecord.getPos();
+        return lineRecord.getProgress();
     }
 
     @Override
@@ -65,6 +65,9 @@ public class RecordReaderFDR implements RecordReader<LongWritable, Text> {
                     appended = true;
                 }
                 gotsomething = true;
+
+                if(getProgress() == 1.0)
+                    return gotsomething;
             }
         } while(appended);
 

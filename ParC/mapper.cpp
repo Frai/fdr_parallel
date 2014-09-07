@@ -82,10 +82,7 @@ int main(int argc, char **argv) {
         fclose(database); // the database file will not be used anymore, thus close it
         delete sFDR; // disposes the used structures
     }
-    // } else {
-    //     cout << "0\t0\n"; // no point was assigned to this mapper
-    // } // end if
-
+    
     //delete the temporary data file
     // sprintf(rm_cmd, "rm -f %s", databaseName);
     // system(rm_cmd);
