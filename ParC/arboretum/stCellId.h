@@ -137,7 +137,7 @@ class stCellId {
          * Returns the index bits of the cell
          */
         char * getIndex() {
-            char * b = new char[nPos * 8];
+            char * b = new char[nPos * 8 + 1];
             b[0] = '\0';
             int z;
 

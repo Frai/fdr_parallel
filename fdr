@@ -5,14 +5,14 @@ m=1 # number of mappers to be used (set with the number automatically defined by
 r=1 # number of reducers to be used
 
 # dataset 1 configuration
-# dataset=synthetic_hadoop.dat # dataset name
-# dimensionality=15 # dataset dimensionality
-# size=100000 # dataset size (total number of points)
+dataset=synthetic_hadoop.dat # dataset name
+dimensionality=15 # dataset dimensionality
+size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
-dataset=synthetic_hadoop_2.dat # dataset name
-dimensionality=2 # dataset dimensionality
-size=4 # dataset size (total number of points)
+# dataset=synthetic_hadoop_2.dat # dataset name
+# dimensionality=2 # dataset dimensionality
+# size=4 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
@@ -20,7 +20,7 @@ input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 # initialTime="$(date +%s)"
 
 echo "Compiling jar..."
-javac packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java packFDR/testMapper.java packFDR/testReducer.java packFDR/PartitionerFDR.java -cp hadoop-core-1.2.1.jar
+javac packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
 jar cf libFDR.jar packFDR
 
 cd $base_path/ParC

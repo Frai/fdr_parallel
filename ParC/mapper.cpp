@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
     while(cin) {
         cin >> num; // pointId discarded
 
+        point[0] = '\0';
         cin >> point; // first value
         for(int i = 1; i < numberOfDimensions; i++) {
             cin >> num; // point values
@@ -66,7 +67,6 @@ int main(int argc, char **argv) {
         fputs(point, database);
 
         cin >> num; // discards the ground truth
-        point[0] = '\0';
         numberOfObjects++;
     } // end while
 
@@ -77,7 +77,8 @@ int main(int argc, char **argv) {
         stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, H, 1, 1);
 
         stCountingTreeMap * pCTree = sFDR->getCalcTree();
-        pCTree->printTreeRecursive(pCTree->getRoot(), 0.5);
+        char index[] = "";
+        pCTree->printTreeRecursive(pCTree->getRoot(), index);
 
         delete sFDR; // disposes the used structures
     }
@@ -85,8 +86,8 @@ int main(int argc, char **argv) {
     fclose(database); // the database file will not be used anymore, thus close it
     
     //delete the temporary data file
-    // sprintf(rm_cmd, "rm -f %s", databaseName);
-    // system(rm_cmd);
+    sprintf(rm_cmd, "rm -f %s", databaseName);
+    system(rm_cmd);
 
     return 0; // success
 }

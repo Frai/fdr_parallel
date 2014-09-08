@@ -45,8 +45,6 @@ int main(int argc, char **argv) {
 	double alpha = 0;
 	int aux;
 
-	map<char*, int> m;
-
 	char cellId[10000];
 	int sum;
 
@@ -71,28 +69,8 @@ int main(int argc, char **argv) {
 		cin >> cellId;
 		cin >> sum;
 	
-		if(m.find(cellId) == m.end()) {
-			cout << "new " << cellId << " " << sum << "\n";
-			m[cellId] = sum;
-		} else {
-			cout << "old " << cellId << " " << m[cellId] << "\n";
-			aux = m[cellId] + sum;
-			m.erase(cellId);
-			m[cellId] = aux;
-		} // end if	
+		cout << cellId << " " << sum << "\n";
 	} // end while
-
-	map<char*, int>::iterator it;
-	for(it = m.begin(); it != m.end(); it++) {
-		aux = 0;
-		for(int i = 0; i < strlen(it->first); i++) {
-			if((it->first)[i] == '1') {
-				aux++;
-			}
-		}
-
-		cout << log(aux) << "\t" << log(it->second) << "\n";
-	}
 
 	return 0; // success
 }
