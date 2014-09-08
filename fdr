@@ -5,14 +5,19 @@ m=1 # number of mappers to be used (set with the number automatically defined by
 r=1 # number of reducers to be used
 
 # dataset 1 configuration
-dataset=synthetic_hadoop.dat # dataset name
-dimensionality=15 # dataset dimensionality
-size=100000 # dataset size (total number of points)
+# dataset=synthetic_hadoop.dat # dataset name
+# dimensionality=15 # dataset dimensionality
+# size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
-# dataset=synthetic_hadoop_2.dat # dataset name
-# dimensionality=2 # dataset dimensionality
-# size=4 # dataset size (total number of points)
+dataset=synthetic_hadoop_2.dat # dataset name
+dimensionality=2 # dataset dimensionality
+size=4 # dataset size (total number of points)
+
+# dataset 3 configuration
+# dataset=synthetic_hadoop_3.dat # dataset name
+# dimensionality=78 # dataset dimensionality
+# size=150000 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 

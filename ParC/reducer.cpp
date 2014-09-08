@@ -1,7 +1,10 @@
-#include <string.h>
+#include <string>
 #include <time.h>
 #include <iostream>
 #include <math.h>
+#include <map>
+#include <vector>
+
 using namespace std;
 
 #ifndef __GNUG__
@@ -45,8 +48,15 @@ int main(int argc, char **argv) {
 	double alpha = 0;
 	int aux;
 
-	char cellId[10000];
+	string cellId;
+	string tmpCellId;
 	int sum;
+	int len;
+	double level;
+
+	map<string, int> m;
+	map<string, int> m2;
+	map<string, int>::iterator it;
 
 	// reads the input parameters
 	FILE *parameters;
@@ -68,9 +78,38 @@ int main(int argc, char **argv) {
 	while(cin) {
 		cin >> cellId;
 		cin >> sum;
-	
-		cout << cellId << " " << sum << "\n";
+
+		if(m.find(cellId) == m.end()) {
+			m[cellId] = sum;
+		} else {
+			m[cellId] = m[cellId] + sum;
+		}
+
+		for(int i = 0; i < numberOfDimensions; i++) {
+			tmpCellId = cellId;
+			for(int j = 0; j < cellId.length(); j++) {
+				if(j % numberOfDimensions == i) {
+					tmpCellId[j] = 'x';
+				}
+			}
+
+			if(m2.find(tmpCellId) == m2.end()) {
+				m2[tmpCellId] = sum;
+			} else {
+				m2[tmpCellId] = m2[tmpCellId] + sum;
+			}
+		}
+
 	} // end while
+
+	for(it = m.begin(); it != m.end(); it++) {
+		cout << it->first << " " << it->second << "\n";
+	}
+
+	cout << "\nCounting removing one variable at a time...\n\n";
+	for(it = m2.begin(); it != m2.end(); it++) {
+		cout << it->first << " " << it->second << "\n";
+	}
 
 	return 0; // success
 }
