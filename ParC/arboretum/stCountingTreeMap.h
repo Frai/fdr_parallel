@@ -82,58 +82,8 @@ class stCountingTreeMap {
             }
         }
 
-        const char * byte_to_binary(const unsigned char x, int bits) {
-            char b[bits];
-            b[0] = '\0';
-
-            int z = 0;
-            for(int i = 0; i < bits; i++)
-                z <<= 1;
-
-            for(; z > 0; z >>= 1) {
-                strcat(b, ((x & z) == z) ? "1" : "0");
-            }
-
-            return b;
-        }
-
-        // void printTree(stNode * pNode, int level) {
-        //     map<stCellId*, stCell*, myCoparisson> * pmCell = pNode->getRoot();
-        //     map<stCellId*, stCell*, myCoparisson>::iterator iter;
-        //     stNode * pAuxNode;
-        //     stCell * pCell;
-
-        //     while(level--) {
-        //         for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
-        //             pCell = iter->second;
-        //             pAuxNode = pCell->nextLevel;
-        //             printTree(pAuxNode, level);
-        //         }
-        //     }
-
-        //     if(pNode) {
-        //         stCellId * pCellId;
-        //         int data = 0;
-        //         for(iter = pmCell->begin(); iter != pmCell->end(); iter++) {
-        //             pCellId = iter->first;
-        //             pCell = iter->second;
-        //             data++;
-        //             printf("data: %d - %d ", data, pCell->getSumOfPoints());
-        //             unsigned char * index = pCellId->getIndex();
-        //             for(int i = 0; i < sizeof(index) / sizeof(index[0]); i++) {
-        //                 printf("%s ", byte_to_binary(index[i]));
-        //             }
-        //             printf("\n");
-        //         }
-        //     }
-        // }
-
         void printTreeRecursive(stNode * pNode, double level) {
-            char indexVal[1000];
-            if((1.0 / level) >= 1000) {
-                return;
-            }
-
+            char * index;
             if(pNode) {
                 map<stCellId*, stCell*, myCoparisson> * pmCell = pNode->getRoot();
                 map<stCellId*, stCell*, myCoparisson>::iterator iter;
@@ -144,16 +94,8 @@ class stCountingTreeMap {
                     pCellId = iter->first;
                     pCell = iter->second;
 
-                    unsigned char * index = pCellId->getIndex();
-                    indexVal[0] = '\0';
-                    // for(int i = 0; i < pCellId->getNPos(); i++) {
-                        // indexVal[i] = pCellId->getBitValue(i, dimensionality);
-                        strcat(indexVal, byte_to_binary(index[0], (1.0 / level)));
-                    // }
-                    // indexVal[((int) (1.0 / level) + 1)] = '\0';
-
-                    // cout << indexVal << "\t" << pCellId->getNPos() << "\n";
-                    cout << indexVal << "\t" << pCell->getSumOfPoints() << "\n";
+                    index = pCellId->getIndex();
+                    cout << index << "\t" << pCell->getSumOfPoints() << "\n";
 
                     printTreeRecursive(pCell->nextLevel, pow(level, 2));
                 } // end for

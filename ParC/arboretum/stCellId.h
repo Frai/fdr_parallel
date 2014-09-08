@@ -7,7 +7,7 @@
  * The GBDI-ICMC-USP Software License Version 1.0
  *
  * Copyright (c) 2009 Grupo de Bases de Dados e Imagens, Instituto de
- * Ciências Matemáticas e de Computação, University of São Paulo -
+ * CiÃªncias MatemÃ¡ticas e de ComputaÃ§Ã£o, University of SÃ£o Paulo -
  * Brazil (the Databases and Image Group - Intitute of Matematical and
  * Computer Sciences).  All rights reserved.
  *
@@ -26,8 +26,8 @@
  * 3. The end-user documentation included with the redistribution,
  *    if any, must include the following acknowledgment:
  *       "This product includes software developed by Grupo de Bases
- *        de Dados e Imagens, Instituto de Ciências Matemáticas e de
- *        Computação, University of São Paulo - Brazil (the Databases 
+ *        de Dados e Imagens, Instituto de CiÃªncias MatemÃ¡ticas e de
+ *        ComputaÃ§Ã£o, University of SÃ£o Paulo - Brazil (the Databases 
  *        and Image Group - Intitute of Matematical and Computer
  *        Sciences)"
  *
@@ -107,6 +107,11 @@ class stCellId {
         */
         int nPos;
 
+        /**
+         * Represents the number of bits used on the index
+         */
+        int bits;
+
     public:
 
         /**
@@ -114,8 +119,9 @@ class stCellId {
         *
         * @param numberOfDimensions Number of dimensions in the database.
         */
-        stCellId(int numberOfDimensions){		 
+        stCellId(int numberOfDimensions){
             nPos = (int) ceil((double)numberOfDimensions / 8);
+            bits = numberOfDimensions;
             index = new unsigned char[nPos];  // one position for each 8 dimensions
             memset(index, 0, nPos); // clean the used memory
         }//end stCellId
@@ -127,8 +133,21 @@ class stCellId {
             delete[] index;
         }//end ~stCellId
 
-        unsigned char * getIndex() {
-            return index;
+        /*
+         * Returns the index bits of the cell
+         */
+        char * getIndex() {
+            char * b = new char[nPos * 8];
+            b[0] = '\0';
+            int z;
+
+            for(int i = 0; i < nPos; i++) {
+                for(z = pow(2, bits - 1); z > 0; z >>= 1) {
+                    strcat(b, ((index[i] & z) == z) ? "1" : "0");
+                }
+            }
+
+            return b;
         }
 
         /**

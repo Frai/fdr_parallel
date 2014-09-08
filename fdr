@@ -1,18 +1,18 @@
 # system configuration
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-m=5 # number of mappers to be used (set with the number automatically defined by Hadoop)
-r=5 # number of reducers to be used
+m=1 # number of mappers to be used (set with the number automatically defined by Hadoop)
+r=1 # number of reducers to be used
 
 # dataset 1 configuration
-dataset=synthetic_hadoop.dat # dataset name
-dimensionality=15 # dataset dimensionality
-size=100000 # dataset size (total number of points)
+# dataset=synthetic_hadoop.dat # dataset name
+# dimensionality=15 # dataset dimensionality
+# size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
-# dataset=synthetic_hadoop_2.dat # dataset name
-# dimensionality=1 # dataset dimensionality
-# size=2 # dataset size (total number of points)
+dataset=synthetic_hadoop_2.dat # dataset name
+dimensionality=2 # dataset dimensionality
+size=2 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
