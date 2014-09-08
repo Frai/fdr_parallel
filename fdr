@@ -12,7 +12,7 @@ r=1 # number of reducers to be used
 # dataset 2 configuration
 dataset=synthetic_hadoop_2.dat # dataset name
 dimensionality=2 # dataset dimensionality
-size=2 # dataset size (total number of points)
+size=4 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 

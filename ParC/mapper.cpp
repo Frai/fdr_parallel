@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     int numberOfObjects = 0;
     cin >> key; // key from Record reader split
     sprintf(databaseName, "database_%s.dat", key);
-    FILE *database = fopen(databaseName, "w");
+    FILE *database = fopen(databaseName, "w+");
 
     while(cin) {
         cin >> num; // pointId discarded
@@ -61,17 +61,17 @@ int main(int argc, char **argv) {
             strcat(point, " ");
             strcat(point, num);
         }
+
         strcat(point, "\n");
         fputs(point, database);
 
         cin >> num; // discards the ground truth
+        point[0] = '\0';
         numberOfObjects++;
     } // end while
 
-    fclose(database); // closes the database in "w" mode
-
     if(numberOfObjects) {
-        database = fopen(databaseName, "r"); // opens the database in "r" mode
+        fseek(database, 0, SEEK_SET);
 
         // creates an object of the class stFDR
         stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, H, 1, 1);
@@ -79,9 +79,10 @@ int main(int argc, char **argv) {
         stCountingTreeMap * pCTree = sFDR->getCalcTree();
         pCTree->printTreeRecursive(pCTree->getRoot(), 0.5);
 
-        fclose(database); // the database file will not be used anymore, thus close it
         delete sFDR; // disposes the used structures
     }
+
+    fclose(database); // the database file will not be used anymore, thus close it
     
     //delete the temporary data file
     // sprintf(rm_cmd, "rm -f %s", databaseName);
