@@ -141,10 +141,14 @@ class stCellId {
             b[0] = '\0';
             int z;
 
+            int tmpBits = bits > 8 ? 8 : bits;
             for(int i = 0; i < nPos; i++) {
-                for(z = pow(2, bits - 1); z > 0; z >>= 1) {
+                for(z = pow(2, tmpBits - 1); z > 0; z >>= 1) {
                     strcat(b, ((index[i] & z) == z) ? "1" : "0");
                 }
+
+                tmpBits = bits - (8 * (i + 1));
+                tmpBits = tmpBits > 8 ? 8 : tmpBits;
             }
 
             return b;
