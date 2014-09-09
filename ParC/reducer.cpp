@@ -1,4 +1,7 @@
+#include <stdio.h>
+#include <string.h>
 #include <string>
+#include <cstdlib>
 #include <time.h>
 #include <iostream>
 #include <math.h>
@@ -50,13 +53,20 @@ int main(int argc, char **argv) {
 
 	string cellId;
 	string tmpCellId;
+	string key;
 	int sum;
 	int len;
 	double level;
 
+	int x;
+
 	map<string, int> m;
 	map<string, int> m2;
+	map<string, int> calcLog2;
 	map<string, int>::iterator it;
+
+	map<int, int> calcLog;
+	map<int, int>::iterator it2;
 
 	// reads the input parameters
 	FILE *parameters;
@@ -103,12 +113,56 @@ int main(int argc, char **argv) {
 	} // end while
 
 	for(it = m.begin(); it != m.end(); it++) {
-		cout << it->first << " " << it->second << "\n";
+		cout << it->first << " " << pow(it->second, 2) << "\n";
+
+		len = (it->first).length();
+		if(calcLog.find(len) == calcLog.end()) {
+			calcLog[len] = pow(it->second, 2);
+		} else {
+			calcLog[len] = calcLog[len] + pow(it->second, 2);
+		}
+	}
+
+	cout << "\n";
+
+	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
+		cout << 1.0 / it2->first << " " << log(1.0 / it2->first);
+		cout << " " << log(it2->second) << "\n"; 
 	}
 
 	cout << "\nCounting removing one variable at a time...\n\n";
+
+	int i;
 	for(it = m2.begin(); it != m2.end(); it++) {
-		cout << it->first << " " << it->second << "\n";
+		cout << it->first << " " << pow(it->second, 2) << "\n";
+
+		for(i = 0; i < numberOfDimensions; i++) {
+			if((it->first)[i] == 'x') {
+				break;
+			}
+		}
+
+		len = (it->first).length();
+		key = to_string(len) + "_" + to_string(i);
+		if(calcLog2.find(key) == calcLog2.end()) {
+			calcLog2[key] = pow(it->second, 2);
+		} else {
+			calcLog2[key] = calcLog2[key] + pow(it->second, 2);
+		}
+	}
+
+	cout << "\n";
+
+	for(it = calcLog2.begin(); it != calcLog2.end(); it++) {
+		i = 0;
+		x = 0;
+		while((it->first)[i] != '_') {
+			x = (10 * x) + ((it->first)[i] - 48);
+			i++;
+		}
+
+		cout << 1.0 / x << " " << log(1.0 / x);
+		cout << " " << log(it->second) << "\n"; 
 	}
 
 	return 0; // success
