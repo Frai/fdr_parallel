@@ -22,3 +22,6 @@
 *.class
 libFDR.jar
 results/*
+.DS_Store
+ParC/.DS_Store
+ParC/hdfs/.DS_Store
