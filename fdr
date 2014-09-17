@@ -1,10 +1,10 @@
 # system configuration
-hadoop_bin=/Users/antoniocf/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
-base_path=/home/antoniocf/fdr_parallel # complete path to the 'BoW_package' folder
-#hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
-#base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-m=2 # number of mappers to be used (set with the number automatically defined by Hadoop)
-r=2 # number of reducers to be used
+#hadoop_bin=/home/antoniocf/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
+#base_path=/home/antoniocf/fdr_parallel # complete path to the 'BoW_package' folder
+hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
+base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
+m=1 # number of mappers to be used (set with the number automatically defined by Hadoop)
+r=1 # number of reducers to be used
 
 # dataset 1 configuration
 #dataset=synthetic_hadoop.dat # dataset name
@@ -12,14 +12,19 @@ r=2 # number of reducers to be used
 #size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
-dataset=synthetic_hadoop_2.dat # dataset name
-dimensionality=2 # dataset dimensionality
-size=4 # dataset size (total number of points)
+# dataset=synthetic_hadoop_2.dat # dataset name
+# dimensionality=2 # dataset dimensionality
+# size=4 # dataset size (total number of points)
 
 # dataset 3 configuration
 # dataset=synthetic_hadoop_3.dat # dataset name
 # dimensionality=78 # dataset dimensionality
 # size=150000 # dataset size (total number of points)
+
+# dataset 4 configuration
+dataset=synthetic_hadoop_4.dat # dataset name
+dimensionality=2 # dataset dimensionality
+size=5 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
@@ -27,8 +32,8 @@ input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 # initialTime="$(date +%s)"
 
 echo "Compiling jar..."
-javac -source 1.6 -target 1.6 -bootclasspath /usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rt.jar packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
-#javac packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
+#javac -source 1.6 -target 1.6 -bootclasspath /usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rt.jar packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
+javac packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
 jar cf libFDR.jar packFDR
 
 cd $base_path/ParC

@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 	// cout << "\n";
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
-		cout << /*1.0 / it2->first << " " <<*/ log(1.0 / it2->first);
+		cout << log(1.0 / pow(2, (it2->first / numberOfDimensions)));
 		cout << " " << log(it2->second) << "\n"; 
 	}
 
