@@ -89,32 +89,39 @@ int main(int argc, char **argv) {
 		cin >> cellId;
 		cin >> sum;
 
+		// while(cellId.compare("01") == 0 || cellId.compare("0101") == 0 || 
+		//    cellId.compare("010101") == 0) {
+		// 	cin >> cellId;
+		// 	cin >> sum;
+		// }
+
 		if(m.find(cellId) == m.end()) {
 			m[cellId] = sum;
 		} else {
 			m[cellId] = m[cellId] + sum;
 		}
 
-		for(int i = 0; i < numberOfDimensions; i++) {
-			tmpCellId = cellId;
-			for(int j = 0; j < cellId.length(); j++) {
-				if(j % numberOfDimensions == i) {
-					tmpCellId[j] = 'x';
-				}
-			}
+		// for(int i = 0; i < numberOfDimensions; i++) {
+		// 	tmpCellId = cellId;
+		// 	for(int j = 0; j < cellId.length(); j++) {
+		// 		if(j % numberOfDimensions == i) {
+		// 			tmpCellId[j] = 'x';
+		// 		}
+		// 	}
 
-			if(m2.find(tmpCellId) == m2.end()) {
-				m2[tmpCellId] = sum;
-			} else {
-				m2[tmpCellId] = m2[tmpCellId] + sum;
-			}
-		}
+		// 	if(m2.find(tmpCellId) == m2.end()) {
+		// 		m2[tmpCellId] = sum;
+		// 	} else {
+		// 		m2[tmpCellId] = m2[tmpCellId] + sum;
+		// 	}
+		// }
 
 	} // end while
 
+	m[cellId] = m[cellId] - sum;
+	
 	for(it = m.begin(); it != m.end(); it++) {
-		// cout << it->first << " " << pow(it->second, 2) << "\n";
-
+		// cout << it->first << " " << it->second << "\n";
 		len = (it->first).length();
 		if(calcLog.find(len) == calcLog.end()) {
 			calcLog[len] = pow(it->second, 2);
@@ -126,8 +133,8 @@ int main(int argc, char **argv) {
 	// cout << "\n";
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
-		cout << log(1.0 / pow(2, (it2->first / numberOfDimensions)));
-		cout << " " << log(it2->second) << "\n"; 
+		cout << log10(1.0 / pow(2, (it2->first / numberOfDimensions)));
+		cout << " " << log10(it2->second) << "\n"; 
 	}
 
 	// cout << "\nCounting removing one variable at a time...\n\n";

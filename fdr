@@ -54,7 +54,7 @@ rm -r -f ../results/$dataset
 mkdir -p ../results/$dataset/output_parallel_$r
 
 echo "Running Hadoop..."
-$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -partitioner packFDR.PartitionerFDR -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
+$hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -input $input -output ParC/output/ -numReduceTasks $r
 echo "Finished"
 
 $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
