@@ -89,12 +89,6 @@ int main(int argc, char **argv) {
 		cin >> cellId;
 		cin >> sum;
 
-		// while(cellId.compare("01") == 0 || cellId.compare("0101") == 0 || 
-		//    cellId.compare("010101") == 0) {
-		// 	cin >> cellId;
-		// 	cin >> sum;
-		// }
-
 		if(m.find(cellId) == m.end()) {
 			m[cellId] = sum;
 		} else {

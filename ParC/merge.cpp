@@ -147,6 +147,8 @@ int main(int argc, const char **argv) {
         cin >> r;
         cin >> sqr;
 
+        cout << r << " " << sqr << "\n";
+
         logR[i] = r;
         logSqR[i] = sqr;
     }

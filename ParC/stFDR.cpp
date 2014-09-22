@@ -101,58 +101,58 @@ stFDR::~stFDR() {
 //---------------------------------------------------------------------------
 void stFDR::fastDistExponent(int numberOfObjects, double ** objectsArray, FILE * database,
                              int normalizeFactor, char memory) {
-    double * minD, * maxD, biggest;
+    // double * minD, * maxD, biggest;
     double * onePoint, * resultPoint, * a, * b; // y=Ax+B to normalize each dataset.
-    double normalizationFactor = 1.0;
+    // double normalizationFactor = 1.0;
 
-    minD = (double *) calloc ((1 + numberOfDimensions), sizeof(double));
-    maxD = (double *) calloc ((1 + numberOfDimensions), sizeof(double));
-    a = (double *) calloc(numberOfDimensions, sizeof(double));
-    b = (double *) calloc(numberOfDimensions, sizeof(double));
+    // minD = (double *) calloc ((1 + numberOfDimensions), sizeof(double));
+    // maxD = (double *) calloc ((1 + numberOfDimensions), sizeof(double));
+    // a = (double *) calloc(numberOfDimensions, sizeof(double));
+    // b = (double *) calloc(numberOfDimensions, sizeof(double));
     onePoint = (double *) calloc(numberOfDimensions, sizeof(double));
     resultPoint = (double *) calloc(numberOfDimensions, sizeof(double));
 
     // normalizes the data
-    minMax(numberOfObjects, objectsArray, database, minD, maxD, memory);
-    biggest = 0; // for Normalize==0, 1 or 3
-    //  0->Independent
-    //  1->mantain proportion
-    //  2->Clip
-    //  3->Geo Referenced
-    if(normalizeFactor == 2) {
-        biggest = MAXDOUBLE;
-    }//end if
+    // minMax(numberOfObjects, objectsArray, database, minD, maxD, memory);
+    // biggest = 0; // for Normalize==0, 1 or 3
+    // //  0->Independent
+    // //  1->mantain proportion
+    // //  2->Clip
+    // //  3->Geo Referenced
+    // if(normalizeFactor == 2) {
+    //     biggest = MAXDOUBLE;
+    // }//end if
 
-    for(int i = 0; i < numberOfDimensions; i++) {
-        a[i] = (maxD[i] - minD[i]) * normalizationFactor; //a takes the range of each dimension
-        b[i] = minD[i];
-        if (a[i] == 0) {
-            a[i] = 1;
-        }//end if
-    }//end for
+    // for(int i = 0; i < numberOfDimensions; i++) {
+    //     a[i] = (maxD[i] - minD[i]) * normalizationFactor; //a takes the range of each dimension
+    //     b[i] = minD[i];
+    //     if (a[i] == 0) {
+    //         a[i] = 1;
+    //     }//end if
+    // }//end for
 
-    for(int i = 0; i < numberOfDimensions; i++) {
-        if((normalizeFactor < 2 || normalizeFactor == 3) && biggest < a[i]) {
-            biggest = a[i];
-        }//end if
+    // for(int i = 0; i < numberOfDimensions; i++) {
+    //     if((normalizeFactor < 2 || normalizeFactor == 3) && biggest < a[i]) {
+    //         biggest = a[i];
+    //     }//end if
     
-        if(normalizeFactor == 2 && biggest > a[i]) {
-            biggest = a[i];
-        }//end if
-    }//end for
+    //     if(normalizeFactor == 2 && biggest > a[i]) {
+    //         biggest = a[i];
+    //     }//end if
+    // }//end for
 
-    if(normalizeFactor != 0) {
-        for(int i = 0; i < numberOfDimensions; i++) {
-            a[i] = biggest; // normalized keeping proportion
-        }//end for
+    // if(normalizeFactor != 0) {
+    //     for(int i = 0; i < numberOfDimensions; i++) {
+    //         a[i] = biggest; // normalized keeping proportion
+    //     }//end for
 
-        /* when we have the proportional normalization, every A[i] are gonna receive
-        the biggest range.*/
-    }//end if
+    //     /* when we have the proportional normalization, every A[i] are gonna receive
+    //     the biggest range.*/
+    // }//end if
 
-    if (normalizeFactor >= 0) {
-        calcTree->setNormalizationVectors(a, b); // if there is some normalization
-    }//end if
+    // if (normalizeFactor >= 0) {
+    //     calcTree->setNormalizationVectors(a, b); // if there is some normalization
+    // }//end if
 
     //process each point
     if (memory != 0) { // limited memory
@@ -168,10 +168,10 @@ void stFDR::fastDistExponent(int numberOfObjects, double ** objectsArray, FILE *
     // disposes used memory
     delete[] onePoint;
     delete[] resultPoint;
-    delete[] a;
-    delete[] b;
-    delete[] minD;
-    delete[] maxD;
+    // delete[] a;
+    // delete[] b;
+    // delete[] minD;
+    // delete[] maxD;
 
 }//end stFDR::FastDistExponent
 
