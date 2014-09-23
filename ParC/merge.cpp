@@ -110,6 +110,7 @@ int main(int argc, const char **argv) {
     FILE *pOut;
 
     int lines;
+    int reducers;
 
     double *logR;
     double *logSqR;
@@ -125,40 +126,50 @@ int main(int argc, const char **argv) {
     double r;
     double sqr;
 
-    // map<double, double> m;
-    // map<double, double>::iterator it;
+    map<double, double> m;
+    map<double, double>::iterator it;
 
-    if(argc != 3) {
-        printf("Usage: ./merge <Number_Of_Lines> <Input_Filename>");
+    if(argc != 4) {
+        printf("Usage: ./merge <Number_Of_Reducers> <Number_Of_Lines> <Input_Filename>");
         return -1;
     }
 
-    lines = atoi(argv[1]);
-    pIn = freopen(argv[2], "r", stdin);
+    reducers = atoi(argv[1]);
+    lines = atoi(argv[2]);
+    pIn = freopen(argv[3], "r", stdin);
     pOut = freopen("../result.txt", "w", stdout);
     if(pIn == NULL || pOut == NULL) {
         printf("Error opening the file.\n");
         return 1;
     }
 
-    logR = (double *) malloc(lines * sizeof(double));
-    logSqR = (double *) malloc(lines * sizeof(double));
+    logR = (double *) malloc(lines / reducers * sizeof(double));
+    logSqR = (double *) malloc(lines / reducers * sizeof(double));
     for(int i = 0; i < lines; i++) {
         cin >> r;
         cin >> sqr;
 
-        cout << r << " " << sqr << "\n";
+        if(m.find(r) == m.end()) {
+            m[r] = sqr;
+        } else {
+            m[r] = m[r] + sqr;
+        }
+        // cout << r << " " << sqr << "\n";
 
-        logR[i] = r;
-        logSqR[i] = sqr;
+        // logR[i] = r;
+        // logSqR[i] = sqr;
     }
 
-    // for(it = m.begin(); it != m.end(); it++) {
-    //     cout << it->first << " " << it->second << "\n";
-    // }
+    int i = lines / reducers - 1;
+    for(it = m.begin(); it != m.end(); it++) {
+        cout << it->first << " " << log10(it->second) << "\n";
+        logR[i] = it->first;
+        logSqR[i] = log10(it->second);
+        i--;
+    }
 
     FractCalc(lines, logR, logSqR, minLSE, minLen, &aMin, &bMin, &aFirst, &bFirst, &error);
-    cout << aMin << " " << bMin << " " << aFirst << " " << bFirst << "\n";
+    cout << aMin << " * x + " << bMin << ", " << aFirst << " * x + " << bFirst << "\n";
 
     fclose(pIn);
     fclose(pOut);

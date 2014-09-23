@@ -119,8 +119,10 @@ int main(int argc, char **argv) {
 		len = (it->first).length();
 		if(calcLog.find(len) == calcLog.end()) {
 			calcLog[len] = pow(it->second, 2);
+			// calcLog[len] = it->second;
 		} else {
 			calcLog[len] = calcLog[len] + pow(it->second, 2);
+			// calcLog[len] = calcLog[len] + it->second;
 		}
 	}
 
@@ -128,7 +130,8 @@ int main(int argc, char **argv) {
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
 		cout << log10(1.0 / pow(2, (it2->first / numberOfDimensions)));
-		cout << " " << log10(it2->second) << "\n"; 
+		// cout << " " << log10(it2->second) << "\n";
+		cout << " " << it2->second << "\n";
 	}
 
 	// cout << "\nCounting removing one variable at a time...\n\n";

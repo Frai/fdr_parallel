@@ -4,7 +4,7 @@
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
 m=1 # number of mappers to be used (set with the number automatically defined by Hadoop)
-r=1 # number of reducers to be used
+r=2 # number of reducers to be used
 
 # dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
@@ -61,7 +61,7 @@ $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
 $hadoop_bin fs -rm -r ParC
 $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
 
-./merge $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
+./merge $r $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
 
 # final wall-clock time meassurement
 # totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
