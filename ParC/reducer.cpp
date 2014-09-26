@@ -65,8 +65,8 @@ int main(int argc, char **argv) {
 	map<string, int> calcLog2;
 	map<string, int>::iterator it;
 
-	map<int, int> calcLog;
-	map<int, int>::iterator it2;
+	map<int, long> calcLog;
+	map<int, long>::iterator it2;
 
 	// reads the input parameters
 	FILE *parameters;
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 	// cout << "\n";
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
-		cout << log10(1.0 / pow(2, (it2->first / numberOfDimensions)));
+		cout << log(1.0 / pow(2, (it2->first / numberOfDimensions)));
 		// cout << " " << log10(it2->second) << "\n";
 		cout << " " << it2->second << "\n";
 	}
