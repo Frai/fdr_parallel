@@ -19,12 +19,13 @@ using namespace std;
 
 int main(int argc, char **argv) {
     int numberOfDimensions = 0;
+    int actualNumberOfDimensions;
     int H = 0;
     double alpha = 0.0;
     char num[1000];
     char point[10000];
     char key[1000];
-    char databaseName[1000]; 
+    char databaseName[1000];
     char rm_cmd[1000];
     long pointId = 0;
 
@@ -40,6 +41,17 @@ int main(int argc, char **argv) {
     dimensionality = fopen("dimensionality", "r");
     fscanf(dimensionality, "%d", &numberOfDimensions);
     fclose(dimensionality);
+    actualNumberOfDimensions = numberOfDimensions;
+
+    FILE * dimensions_file = fopen("dimensions_tmp", "r");
+    char * dimensions = (char *) malloc((numberOfDimensions + 1) * sizeof(char));
+    fscanf(dimensions_file, "%s", dimensions);
+
+    for(int i = 0; i < numberOfDimensions; i++) {
+        if(dimensions[i] == '1') {
+            actualNumberOfDimensions--;
+        }
+    }
 
     // first validations
     if(H < 2) {
@@ -56,11 +68,15 @@ int main(int argc, char **argv) {
         cin >> num; // pointId discarded
 
         point[0] = '\0';
-        cin >> point; // first value
-        for(int i = 1; i < numberOfDimensions; i++) {
-            cin >> num; // point values
-            strcat(point, " ");
-            strcat(point, num);
+
+        for(int i = 0; i < numberOfDimensions; i++) {
+            if(dimensions[i] == '1') {
+                cin >> num;
+            } else {
+                cin >> num; // point values
+                strcat(point, num);
+                strcat(point, " ");
+            }
         }
 
         strcat(point, "\n");
@@ -74,7 +90,7 @@ int main(int argc, char **argv) {
         fseek(database, 0, SEEK_SET);
 
         // creates an object of the class stFDR
-        stFDR *sFDR = new stFDR(0, database, numberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, H, 1, 1);
+        stFDR *sFDR = new stFDR(0, database, actualNumberOfDimensions, NORMALIZE_FACTOR, numberOfObjects, H, 1, 1);
 
         stCountingTreeMap * pCTree = sFDR->getCalcTree();
         char index[] = "";
@@ -84,10 +100,13 @@ int main(int argc, char **argv) {
     }
 
     fclose(database); // the database file will not be used anymore, thus close it
-    
+
     //delete the temporary data file
     sprintf(rm_cmd, "rm -f %s", databaseName);
     system(rm_cmd);
+
+    free(dimensions);
+    fclose(dimensions_file);
 
     return 0; // success
 }

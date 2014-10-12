@@ -48,25 +48,23 @@ void printElapsed() {
 int main(int argc, char **argv) {
 	int H = 0;
 	int numberOfDimensions = 0;
+	int actualNumberOfDimensions = 0;
 	double alpha = 0;
-	int aux;
 
 	string cellId;
 	string tmpCellId;
 	string key;
-	int sum;
-	int len;
+	double sum;
+	double len;
 	double level;
 
-	int x;
+	map<string, double> m;
+	map<string, double> m2;
+	map<string, double> calcLog2;
+	map<string, double>::iterator it;
 
-	map<string, int> m;
-	map<string, int> m2;
-	map<string, int> calcLog2;
-	map<string, int>::iterator it;
-
-	map<int, long> calcLog;
-	map<int, long>::iterator it2;
+	map<double, double> calcLog;
+	map<double, double>::iterator it2;
 
 	// reads the input parameters
 	FILE *parameters;
@@ -81,6 +79,20 @@ int main(int argc, char **argv) {
 	fscanf(dimensionality,"%d",&numberOfDimensions);
 	fclose(dimensionality);
 
+	actualNumberOfDimensions = numberOfDimensions;
+	FILE * dimensions_tmp = fopen("dimensions_tmp", "r");
+	char * dimensions_str = (char *) malloc((numberOfDimensions + 1) * sizeof(char));
+	fscanf(dimensions_tmp, "%s", dimensions_str);
+	fclose(dimensions_tmp);
+
+	for(int i = 0; i < numberOfDimensions; i++) {
+		if(dimensions_str[i] == '1') {
+			actualNumberOfDimensions--;
+		}
+	}
+
+	free(dimensions_str);
+
 	if(H < 2) { // first validations
 		cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
 	} // end if
@@ -94,80 +106,36 @@ int main(int argc, char **argv) {
 		} else {
 			m[cellId] = m[cellId] + sum;
 		}
-
-		// for(int i = 0; i < numberOfDimensions; i++) {
-		// 	tmpCellId = cellId;
-		// 	for(int j = 0; j < cellId.length(); j++) {
-		// 		if(j % numberOfDimensions == i) {
-		// 			tmpCellId[j] = 'x';
-		// 		}
-		// 	}
-
-		// 	if(m2.find(tmpCellId) == m2.end()) {
-		// 		m2[tmpCellId] = sum;
-		// 	} else {
-		// 		m2[tmpCellId] = m2[tmpCellId] + sum;
-		// 	}
-		// }
-
 	} // end while
 
 	m[cellId] = m[cellId] - sum;
-	
+
 	for(it = m.begin(); it != m.end(); it++) {
-		// cout << it->first << " " << it->second << "\n";
 		len = (it->first).length();
-		if(calcLog.find(len) == calcLog.end()) {
-			calcLog[len] = pow(it->second, 2);
-			// calcLog[len] = it->second;
-		} else {
-			calcLog[len] = calcLog[len] + pow(it->second, 2);
-			// calcLog[len] = calcLog[len] + it->second;
+		
+		if(it->second > 1) {
+			if(calcLog.find(len) == calcLog.end()) {
+				// calcLog[len] = pow(it->second, 2);
+				calcLog[len] = it->second * ((it->second - 1.0) / 2.0);
+			} else {
+				// calcLog[len] = calcLog[len] + pow(it->second, 2);
+				calcLog[len] = calcLog[len] + (it->second * ((it->second - 1.0) / 2.0));
+			}
+		// } else {
+		// 	if(calcLog.find(len) == calcLog.end()) {
+		// 		calcLog[len] = it->second;
+		// 		// calcLog[len] = it->second * ((it->second - 1.0) / 2.0);
+		// 	} else {
+		// 		calcLog[len] = calcLog[len] + it->second;
+		// 		// calcLog[len] = calcLog[len] + (it->second * ((it->second - 1.0) / 2.0));
+		// 	}
 		}
 	}
 
-	// cout << "\n";
-
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
-		cout << log(1.0 / pow(2, (it2->first / numberOfDimensions)));
-		// cout << " " << log10(it2->second) << "\n";
+		cout << log(1.0 / pow(2, (it2->first / actualNumberOfDimensions)));
 		cout << " " << it2->second << "\n";
 	}
-
-	// cout << "\nCounting removing one variable at a time...\n\n";
-
-	// int i;
-	// for(it = m2.begin(); it != m2.end(); it++) {
-	// 	cout << it->first << " " << pow(it->second, 2) << "\n";
-
-	// 	for(i = 0; i < numberOfDimensions; i++) {
-	// 		if((it->first)[i] == 'x') {
-	// 			break;
-	// 		}
-	// 	}
-
-	// 	len = (it->first).length();
-	// 	key = to_string(len) + "_" + to_string(i);
-	// 	if(calcLog2.find(key) == calcLog2.end()) {
-	// 		calcLog2[key] = pow(it->second, 2);
-	// 	} else {
-	// 		calcLog2[key] = calcLog2[key] + pow(it->second, 2);
-	// 	}
-	// }
-
-	// cout << "\n";
-
-	// for(it = calcLog2.begin(); it != calcLog2.end(); it++) {
-	// 	i = 0;
-	// 	x = 0;
-	// 	while((it->first)[i] != '_') {
-	// 		x = (10 * x) + ((it->first)[i] - 48);
-	// 		i++;
-	// 	}
-
-	// 	cout << 1.0 / x << " " << log(1.0 / x);
-	// 	cout << " " << log(it->second) << "\n"; 
-	// }
 
 	return 0; // success
 }
