@@ -111,6 +111,7 @@ int main(int argc, char **argv) {
 	m[cellId] = m[cellId] - sum;
 
 	for(it = m.begin(); it != m.end(); it++) {
+		// cout << it->first << " " << it->second << "\n";
 		len = (it->first).length();
 		
 		if(it->second > 1) {

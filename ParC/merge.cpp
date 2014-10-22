@@ -451,7 +451,7 @@ int main(int argc, const char **argv) {
     int i = 0;
     aux = size * ((size - 1.0) / 2.0);
     for(rit = m.rbegin(); rit != m.rend(); ++rit) {
-        cout << rit->first << " " << log(aux) << "\n";
+        cout << rit->first << " " << log(aux) << " " << aux <<  "\n";
         logR[i] = rit->first;
         logSqR[i] = log(aux);
         i++;

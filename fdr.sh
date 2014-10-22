@@ -7,9 +7,9 @@ m=1 # number of mappers to be used (set with the number automatically defined by
 r=1 # number of reducers to be used
 
 # dataset 1 configuration
-#dataset=synthetic_hadoop.dat # dataset name
-#dimensionality=15 # dataset dimensionality
-#size=100000 # dataset size (total number of points)
+dataset=synthetic_hadoop.dat # dataset name
+dimensionality=9 # dataset dimensionality
+size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
 # dataset=synthetic_hadoop_2.dat # dataset name
@@ -42,9 +42,9 @@ r=1 # number of reducers to be used
 # size=100000 # dataset size (total number of points)
 
 # dataset 8 configuration
-dataset=synthetic_hadoop_8.dat # dataset name
-dimensionality=3 # dataset dimensionality
-size=100000 # dataset size (total number of points)
+#dataset=synthetic_hadoop_8.dat # dataset name
+#dimensionality=3 # dataset dimensionality
+#size=100000 # dataset size (total number of points)
 
 # dataset 9 configuration
 # dataset=synthetic_hadoop_9.dat # dataset name
