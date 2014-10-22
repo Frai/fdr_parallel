@@ -4,6 +4,7 @@
 #include <map>
 #include <cfloat>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include "CPointSet.h"
 
@@ -57,7 +58,7 @@ double linerror (double *X, double *Y, int n, double &m, double &b) {
 //      - value of A and B (y=Ax+B in the resulting line): AMin, BMim
 //      - error return the error obtained for <A,B>
 //---------------------------------------------------------------------------
-void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE, 
+void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
                   double * A, double * B, double * error) {
     fprintf(stderr, "NewFractCalc\n");
 
@@ -101,7 +102,7 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
     if(points[0]->error == MAXDOUBLE) {
         points[0]->error = 0;
     }
-                     
+
     maxIdx = 0;
 
     // does the iteractive process if the fitting error for all the points is higher than
@@ -113,16 +114,16 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
             aux = i;
             points[j]->firstPoint = j;
             points[j]->count = NP;
-            
+
             for(k = 0; k < NP; k++, aux--) {
                 points[j]->logR[k] = LogR[aux];
                 points[j]->logSqR[k] = LogSqR[aux];
             }
 
             points[j]->lastPoint = j + 1;
-            points[j]->error = 
+            points[j]->error =
                     linerror(points[j]->logR, points[j]->logSqR, NP, points[j]->A, points[j]->B);
-            
+
             if(points[j]->error == MAXDOUBLE) {
                 points[j]->error = 0;
             }
@@ -137,13 +138,13 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
             if(points[i-1]->A < minSlope && points[i]->A < minSlope) {
                 slopeError[i] = 0.0;
             } else {
-                slopeError[i] = (fabs(points[i-1]->A - points[i]->A)) / 
+                slopeError[i] = (fabs(points[i-1]->A - points[i]->A)) /
                                    (points[i-1]->A + points[i]->A);
-                
+
                 if(slopeError[i] > max) {
                     max = slopeError[i];   // gets the highest error
                 }
-                
+
                 if(slopeError[i] < min) {
                     min = slopeError[i];  // gets the lowest error
                 }
@@ -154,7 +155,7 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
         } // end for
 
         // compute initial parameters
-        // excludes min and max slope errors and computes mean slope error (mError), which is 
+        // excludes min and max slope errors and computes mean slope error (mError), which is
         // used to define the initial step error (sError)
         if(nPairs >= 4 && aux > 2) {  // if there is at least three slopeErrors to consider
             mError -= (max + min);
@@ -164,7 +165,7 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
         if(mError >= maxError) {
             mError = maxError;  // if mean slope error exceeds the max slope error defined
         }
-        
+
         sError = mError / 2;  // step error - 50% of mean slope error
         add = sError / 2; // increment of sError in each step
 
@@ -184,16 +185,16 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
                     if(points[j]->A < minSlope && points[i]->A < minSlope) {
                         slopeError[i]=0.0; // low slope
                     } else {
-                        slopeError[i] = (fabs(points[j]->A - points[i]->A)) / 
+                        slopeError[i] = (fabs(points[j]->A - points[i]->A)) /
                                             (points[j]->A + points[i]->A);
                     }
 
                     if(slopeError[i] < sError) {
                         // joins the sets of points and computes the slope of the new fitting line
                         *points[j] += *points[i];
-                        points[j]->error = linerror(points[j]->logR, points[j]->logSqR, 
+                        points[j]->error = linerror(points[j]->logR, points[j]->logSqR,
                                                     points[j]->count, points[j]->A, points[j]->B);
-                
+
                         if(points[j]->error == MAXDOUBLE) {
                             points[j]->error = 0;
                         }
@@ -204,31 +205,31 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
                             slopeError[i] = -1;
                         } else { // if the fitting error is high, undo join
                             *points[j] -= *points[i] ;
-                            points[j]->error = linerror(points[j]->logR, points[j]->logSqR, 
-                                                        points[j]->count, points[j]->A, 
+                            points[j]->error = linerror(points[j]->logR, points[j]->logSqR,
+                                                        points[j]->count, points[j]->A,
                                                         points[j]->B);
-                            
+
                             if(points[j]->error == MAXDOUBLE) {
                                 points[j]->error = 0;
                             }
-                        
+
                             j = i;
-                
+
                         }  // end else
                     } else {
-                        j = i;  
+                        j = i;
                     }
-        
+
                     i++;
 
-                } else { 
+                } else {
                     i++;
                 } // end if points->count
             }// end while j && i
 
             i = 1;
             j = 0;
-            
+
             // updates slopeError after last iteraction
             while(j < nPairs - 1 && i < nPairs) {
                 while(j < nPairs && points[j]->count == 0) {
@@ -246,11 +247,11 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
                     // consecutive sets of points with very
                     if (points[j]->A < minSlope && points[i]->A < minSlope) {
                         slopeError[i] = 0.0; // low slope
-                    } else { 
-                        slopeError[i] = (fabs(points[j]->A - points[i]->A)) / 
+                    } else {
+                        slopeError[i] = (fabs(points[j]->A - points[i]->A)) /
                                             (points[j]->A + points[i]->A);
                     }
-                    
+
                     j = i;
                     i++;
                 }
@@ -314,7 +315,7 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
 //      - err return the error obtained for <AFirst, BFirst>
 //    A and B stands for y=Ax+B in the resultant line.
 void FractCalc (int NR, double *LogR, double *LogSqR, double MinLSE, int MinLen,
-                double *AMin, double *BMin, 
+                double *AMin, double *BMin,
                 double *AFirst, double *BFirst, double *error ) {
     fprintf(stderr, "FractCalc\n");
     double errMinusBottom;
@@ -407,6 +408,11 @@ int main(int argc, const char **argv) {
         pOut = freopen("../result.txt", argv[1], stdout);
     } else {
         pOut = freopen("../result_tmp.txt", argv[1], stdout);
+    }
+
+    if(pOut == NULL) {
+        fprintf(stderr, "Could not open the file. Exiting...\n");
+        return -1;
     }
 
     lines = atoi(argv[2]);
