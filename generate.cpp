@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
 	double number;
 	
 	fprintf(pFile2, "set verbose info\n");
+	fprintf(pFile2, "set verbose graph\n");
 	fprintf(pFile2, "set fitalg 1\n");
 	fprintf(pFile2, "set norma independent\n");
 	fprintf(pFile2, "set dimension %d\n", dimensions);
