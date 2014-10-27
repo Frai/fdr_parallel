@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         fprintf(pFile1, "%d ", i + 1);
         for(int j = 0; j < dimensions; j++) {
             if(j >= 2) {
-                number = rand() / (RAND_MAX * 1.0 * j);
+                number = rand() / (RAND_MAX * 2.0 * j);
             } else {
                 number = rand() / (RAND_MAX * 1.0);
             }

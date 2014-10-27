@@ -8,7 +8,7 @@ r=1 # number of reducers to be used
 
 # dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
-dimensionality=9 # dataset dimensionality
+dimensionality=4 # dataset dimensionality
 size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration
@@ -95,7 +95,7 @@ $hadoop_bin fs -rm -r ParC
 $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
 ./merge w $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
 echo "Finished first run..."
-# cat ../result.txt
+cat ../result.txt
 # End of the first run.
 
 # Begin of the following runs

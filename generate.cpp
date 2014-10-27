@@ -13,18 +13,18 @@ int main(int argc, char *argv[]) {
 	}
 
 	srand(time(NULL));
-	
+
 	FILE * pFile1;
 	FILE * pFile2;
 
 	pFile1 = fopen("synthetic.dat", "w");
 	pFile2 = fopen("synthetic.stc", "w");
-	
+
 	int dimensions = atoi(argv[1]);
 	int points = atoi(argv[2]);
 
 	double number;
-	
+
 	fprintf(pFile2, "set verbose info\n");
 	fprintf(pFile2, "set verbose graph\n");
 	fprintf(pFile2, "set fitalg 1\n");
@@ -34,8 +34,8 @@ int main(int argc, char *argv[]) {
 
 	for(int i = 0; i < points; i++) {
 		fprintf(pFile1, "%d ", i + 1);
+                number = rand() / (RAND_MAX * 1.0);
 		for(int j = 0; j < dimensions; j++) {
-			number = rand() / (RAND_MAX * 1.0);
 			fprintf(pFile1, "%lf ", number);
 			fprintf(pFile2, "%lf\t", number);
 		}

@@ -113,14 +113,13 @@ int main(int argc, char **argv) {
 	for(it = m.begin(); it != m.end(); it++) {
 		// cout << it->first << " " << it->second << "\n";
 		len = (it->first).length();
-		
-		if(it->second > 1) {
+		// if(it->second > 1) {
 			if(calcLog.find(len) == calcLog.end()) {
 				// calcLog[len] = pow(it->second, 2);
-				calcLog[len] = it->second * ((it->second - 1.0) / 2.0);
+				calcLog[len] = (it->second * (it->second - 1.0) / 2.0);
 			} else {
 				// calcLog[len] = calcLog[len] + pow(it->second, 2);
-				calcLog[len] = calcLog[len] + (it->second * ((it->second - 1.0) / 2.0));
+				calcLog[len] = calcLog[len] + (it->second * (it->second - 1.0) / 2.0);
 			}
 		// } else {
 		// 	if(calcLog.find(len) == calcLog.end()) {
@@ -130,7 +129,7 @@ int main(int argc, char **argv) {
 		// 		calcLog[len] = calcLog[len] + it->second;
 		// 		// calcLog[len] = calcLog[len] + (it->second * ((it->second - 1.0) / 2.0));
 		// 	}
-		}
+		// }
 	}
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
