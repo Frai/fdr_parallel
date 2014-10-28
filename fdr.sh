@@ -3,12 +3,12 @@
 #base_path=/home/antoniocf/fdr_parallel # complete path to the 'BoW_package' folder
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-m=1 # number of mappers to be used (set with the number automatically defined by Hadoop)
+m=2 # number of mappers to be used (set with the number automatically defined by Hadoop)
 r=1 # number of reducers to be used
 
 # dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
-dimensionality=4 # dataset dimensionality
+dimensionality=8 # dataset dimensionality
 size=100000 # dataset size (total number of points)
 
 # dataset 2 configuration

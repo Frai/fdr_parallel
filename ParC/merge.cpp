@@ -415,6 +415,8 @@ int main(int argc, const char **argv) {
         return -1;
     }
 
+    fprintf(stderr, "----- MERGER OUTPUT -----\n");
+
     lines = atoi(argv[2]);
     pIn = freopen(argv[3], "r", stdin);
     dimensionality_file = fopen("dimensionality", "r");
@@ -438,8 +440,10 @@ int main(int argc, const char **argv) {
 
         if(m.find(r) == m.end()) {
             m[r] = sqr;
+            fprintf(stderr, "New Radius: %lf - %lf\n", r, sqr);
         } else {
             m[r] = m[r] + sqr;
+            fprintf(stderr, "Old Radius: %lf - %lf\n", r, sqr);
         }
     }
 

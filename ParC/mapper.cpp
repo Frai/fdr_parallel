@@ -58,6 +58,8 @@ int main(int argc, char **argv) {
         cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
     } // end if
 
+    fprintf(stderr, "----- MAPPER OUTPUT -----\n");
+
     // reads objects from the source database
     int numberOfObjects = 0;
     cin >> key; // key from Record reader split
@@ -69,27 +71,24 @@ int main(int argc, char **argv) {
         if(!strcmp(num, "0")) {
             break;
         }
-        // fprintf(stderr, "num: %s\n", num);
+
         point[0] = '\0';
 
         for(int i = 0; i < numberOfDimensions; i++) {
             if(dimensions[i] == '1') {
                 cin >> num;
-                // fprintf(stderr, "num1: %s\n", num);
             } else {
                 cin >> num; // point values
-                // fprintf(stderr, "num2: %s\n", num);
                 strcat(point, num);
                 strcat(point, " ");
             }
         }
 
-        strcat(point, "\n");
         // fprintf(stderr, "point: %s\n", point);
+        strcat(point, "\n");
         fputs(point, database);
 
         cin >> num; // discards the ground truth
-        // fprintf(stderr, "num3: %s\n", num);
         numberOfObjects++;
     } // end while
 

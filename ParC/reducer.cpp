@@ -38,6 +38,18 @@ void printElapsed() {
 	printf("Elapsed time: %0.3lf sec.\n", (double) (clock() - startTime) / CLOCKS_PER_SEC);
 }//end printElapsed
 
+int stringToInt(string input, int numberOfDimensions) {
+	unsigned int res = 0;
+	
+	for(int i = input.length() - 1; i >= 0; i--) {
+		if(input[i] == '1') {
+			res += pow(2, numberOfDimensions - i - 1);
+		}
+	}
+
+	return res;
+}
+
 /**
  * Initiates the clustering process.
  *
@@ -59,8 +71,6 @@ int main(int argc, char **argv) {
 	double level;
 
 	map<string, double> m;
-	map<string, double> m2;
-	map<string, double> calcLog2;
 	map<string, double>::iterator it;
 
 	map<double, double> calcLog;
@@ -97,39 +107,36 @@ int main(int argc, char **argv) {
 		cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
 	} // end if
 
+	fprintf(stderr, "----- REDUCER OUTPUT -----\n");
+
 	while(cin) {
 		cin >> cellId;
 		cin >> sum;
 
 		if(m.find(cellId) == m.end()) {
 			m[cellId] = sum;
+			// fprintf(stderr, "New Cell: %s - %lf\n", cellId.c_str(), sum);
 		} else {
 			m[cellId] = m[cellId] + sum;
+			// fprintf(stderr, "Old Cell: %s - %lf\n", cellId.c_str(), sum);
 		}
 	} // end while
 
 	m[cellId] = m[cellId] - sum;
 
 	for(it = m.begin(); it != m.end(); it++) {
-		// cout << it->first << " " << it->second << "\n";
 		len = (it->first).length();
-		// if(it->second > 1) {
+		// fprintf(stderr, "Cell: %s - %lf - %lf\n", it->first.c_str(), it->second, len);
+			// fprintf(stderr, "Cell: %s %d - %lf - %lf\n", it->first.c_str(), stringToInt(it->first, numberOfDimensions), it->second, len);
+		if(it->second > 1) {
 			if(calcLog.find(len) == calcLog.end()) {
-				// calcLog[len] = pow(it->second, 2);
 				calcLog[len] = (it->second * (it->second - 1.0) / 2.0);
+				// fprintf(stderr, "New Len: %s - %lf - %lf - %lf\n", it->first.c_str(), it->second, len, calcLog[len]);
 			} else {
-				// calcLog[len] = calcLog[len] + pow(it->second, 2);
 				calcLog[len] = calcLog[len] + (it->second * (it->second - 1.0) / 2.0);
+				// fprintf(stderr, "Old Len: %s - %lf - %lf - %lf\n", it->first.c_str(), it->second, len, calcLog[len]);
 			}
-		// } else {
-		// 	if(calcLog.find(len) == calcLog.end()) {
-		// 		calcLog[len] = it->second;
-		// 		// calcLog[len] = it->second * ((it->second - 1.0) / 2.0);
-		// 	} else {
-		// 		calcLog[len] = calcLog[len] + it->second;
-		// 		// calcLog[len] = calcLog[len] + (it->second * ((it->second - 1.0) / 2.0));
-		// 	}
-		// }
+		}
 	}
 
 	for(it2 = calcLog.begin(); it2 != calcLog.end(); it2++) {
