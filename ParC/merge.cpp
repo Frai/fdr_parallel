@@ -60,7 +60,7 @@ double linerror (double *X, double *Y, int n, double &m, double &b) {
 //---------------------------------------------------------------------------
 void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
                   double * A, double * B, double * error) {
-    fprintf(stderr, "NewFractCalc\n");
+    //fprintf(stderr, "NewFractCalc\n");
 
     int i, j, k, aux, nPairs, NP, maxCount, maxIdx;
     CPointSet ** points;
@@ -317,7 +317,7 @@ void NewFractCalc(int N, double * LogR, double * LogSqR, double MinLSE,
 void FractCalc (int NR, double *LogR, double *LogSqR, double MinLSE, int MinLen,
                 double *AMin, double *BMin,
                 double *AFirst, double *BFirst, double *error ) {
-    fprintf(stderr, "FractCalc\n");
+    //fprintf(stderr, "FractCalc\n");
     double errMinusBottom;
     double errMinusTop;
     double FDA;
@@ -440,10 +440,10 @@ int main(int argc, const char **argv) {
 
         if(m.find(r) == m.end()) {
             m[r] = sqr;
-            fprintf(stderr, "New Radius: %lf - %lf\n", r, sqr);
+            //fprintf(stderr, "New Radius: %lf - %lf\n", r, sqr);
         } else {
             m[r] = m[r] + sqr;
-            fprintf(stderr, "Old Radius: %lf - %lf\n", r, sqr);
+            //fprintf(stderr, "Old Radius: %lf - %lf\n", r, sqr);
         }
     }
 
@@ -475,7 +475,7 @@ int main(int argc, const char **argv) {
     }
     maxR = logR[i];
 
-    
+
     NewFractCalc (m.size() + 2, logR, logSqR, minLSE, &aMin, &bMin, &error);
 
     if(aMin == 0 && bMin == 0) {
