@@ -11,50 +11,10 @@ dataset=synthetic_hadoop.dat # dataset name
 dimensionality=8 # dataset dimensionality
 size=100000 # dataset size (total number of points)
 
-# dataset 2 configuration
-# dataset=synthetic_hadoop_2.dat # dataset name
-# dimensionality=2 # dataset dimensionality
-# size=4 # dataset size (total number of points)
-
-# dataset 3 configuration
-#dataset=synthetic_hadoop_3.dat # dataset name
-#dimensionality=78 # dataset dimensionality
-#size=150000 # dataset size (total number of points)
-
-# dataset 4 configuration
-# dataset=synthetic_hadoop_4.dat # dataset name
-# dimensionality=2 # dataset dimensionality
-# size=5 # dataset size (total number of points)
-
-# dataset 5 configuration
-# dataset=synthetic_hadoop_5.dat # dataset name
-# dimensionality=3 # dataset dimensionality
-# size=1000000 # dataset size (total number of points)
-
-# dataset 6 configuration
-#dataset=synthetic_hadoop_6.dat # dataset name
-#dimensionality=3 # dataset dimensionality
-#size=1000 # dataset size (total number of points)
-
-# dataset 7 configuration
-# dataset=synthetic_hadoop_7.dat # dataset name
-# dimensionality=15 # dataset dimensionality
-# size=100000 # dataset size (total number of points)
-
-# dataset 8 configuration
-#dataset=synthetic_hadoop_8.dat # dataset name
-#dimensionality=3 # dataset dimensionality
-#size=100000 # dataset size (total number of points)
-
-# dataset 9 configuration
-# dataset=synthetic_hadoop_9.dat # dataset name
-# dimensionality=15 # dataset dimensionality
-# size=10 # dataset size (total number of points)
-
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
 # initial wall-clock time meassurement
-# initialTime="$(date +%s)"
+initialTime="$(date +%s)"
 
 echo "Compiling jar..."
 #javac -source 1.6 -target 1.6 -bootclasspath /usr/lib/jvm/java-1.6.0-openjdk-1.6.0.0.x86_64/jre/lib/rt.jar packFDR/RecordReaderFDR.java packFDR/InputFormatFDR.java -cp hadoop-core-1.2.1.jar
@@ -95,7 +55,7 @@ $hadoop_bin fs -rm -r ParC
 $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
 ./merge w $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
 echo "Finished first run..."
-cat ../result.txt
+#cat ../result.txt
 # End of the first run.
 
 # Begin of the following runs
@@ -143,8 +103,8 @@ cat ../result.txt
 # End of the loop
 
 # final wall-clock time meassurement
-# totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
-# echo $totalTime > ../results/$dataset/output_parallel_$r/time
+totalTime=`echo "$(date +%s) - $initialTime" | bc -l`
+echo $totalTime > ../results/$dataset/output_parallel_$r/time
 
 #cleanup
 echo "Cleaning..."
