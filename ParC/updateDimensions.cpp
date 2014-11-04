@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
     while(fgets(line, 2 * dimensionality + 50, result) != NULL) {
         while(line[0] != 'D') {
-            if(fgets(line, 2 * dimensionality + 50, result) != NULL) {
+            if(fgets(line, 2 * dimensionality + 50, result) == NULL) {
                 break;
             }
         }

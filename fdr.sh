@@ -3,13 +3,12 @@
 #base_path=/home/antoniocf/fdr_parallel # complete path to the 'BoW_package' folder
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-m=2 # number of mappers to be used (set with the number automatically defined by Hadoop)
-r=1 # number of reducers to be used
+r=10 # number of reducers to be used
 
 # dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
-dimensionality=8 # dataset dimensionality
-size=100000 # dataset size (total number of points)
+dimensionality=5 # dataset dimensionality
+size=10000000 # dataset size (total number of points)
 
 input=hdfs/$dataset/ # complete path in the HDFS file system to the data files
 
@@ -55,7 +54,7 @@ $hadoop_bin fs -rm -r ParC
 $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
 ./merge w $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
 echo "Finished first run..."
-#cat ../result.txt
+cat ../result.txt
 # End of the first run.
 
 # Begin of the following runs
@@ -64,42 +63,42 @@ echo "Finished first run..."
 # - The index number will change as the following algorithm:
 #   - i from dimensionality to one.
 #   - j from one to dimensionality
-#echo "Started" $dimensionality "runs..."
-#i=$dimensionality
-#num=1
-#while [ "$i" -ge "$num" ];
-#do
-#    echo "i $i"
-#    j=1
-#    while [ "$j" -le "$i" ];
-#    do
-#        echo "j $j"
-#        $hadoop_bin fs -rm -r ParC
-#        $hadoop_bin fs -mkdir ParC
-#
-#        rm -r -f ../results/$dataset
-#        mkdir -p ../results/$dataset/output_parallel_$r
-#
-#        # Changes the file of the dimensions to be considered.
-#        ./genDimensions a $dimensionality
-#
-#        # Run Hadoop with the selected dimensions
-#        $hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -file dimensions -file dimensions_tmp -input $input -output ParC/output/ -numReduceTasks $r
-#
-#        $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
-#        $hadoop_bin fs -rm -r ParC
-#        $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
-#        ./merge a $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
-#
-#        j=$(($j+1))
-#    done
-#
-#    # Check which one is the smallest updates the index
-#    ./updateDimensions $dimensionality
-#
-#    i=$(($i-1))
-#done
-#echo "Finished all the runs..."
+echo "Started" $dimensionality "runs..."
+i=$dimensionality
+num=1
+while [ "$i" -gt "$num" ];
+do
+   echo "i $i"
+   j=1
+   while [ "$j" -le "$i" ];
+   do
+       echo "j $j"
+       $hadoop_bin fs -rm -r ParC
+       $hadoop_bin fs -mkdir ParC
+
+       rm -r -f ../results/$dataset
+       mkdir -p ../results/$dataset/output_parallel_$r
+
+       # Changes the file of the dimensions to be considered.
+       ./genDimensions a $dimensionality
+
+       # Run Hadoop with the selected dimensions
+       $hadoop_bin jar ../myHadoopStreaming.jar -libjars ../libFDR.jar -D mapreduce.task.timeout=0 fs.local.block.size=1048576 -inputformat packFDR.InputFormatFDR -mapper mapper -reducer reducer -file mapper -file reducer -file dimensionality -file size -file divisions -file parameters -file dimensions -file dimensions_tmp -input $input -output ParC/output/ -numReduceTasks $r
+
+       $hadoop_bin fs -get ParC/output/* ../results/$dataset/output_parallel_$r/
+       $hadoop_bin fs -rm -r ParC
+       $hadoop_bin fs -getmerge ../results/$dataset/output_parallel_$r/ ../results/$dataset/output_parallel_$r/merged.txt
+       ./merge a $(wc -l ../results/$dataset/output_parallel_$r/merged.txt)
+
+       j=$(($j+1))
+   done
+
+   # Check which one is the smallest updates the index
+   ./updateDimensions $dimensionality
+   mv ../result_tmp.txt ../result_tmp_$i.txt
+   i=$(($i-1))
+done
+echo "Finished all the runs..."
 # End of the loop
 
 # final wall-clock time meassurement

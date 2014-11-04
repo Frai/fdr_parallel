@@ -28,7 +28,6 @@ int main(int argc, char *argv[]) {
             fprintf(pFile, "0");
             fprintf(pFile2, "0");
         }
-
     } else {
         if((pFile = fopen("dimensions", "r")) == NULL || 
            (pFile2 = fopen("dimensions_tmp", "r")) == NULL) {
@@ -57,6 +56,9 @@ int main(int argc, char *argv[]) {
                 index--;
             }
 
+            if(index == -1) {
+                index = dimensionality - 1;
+            }
 
             for(int i = 0; i < dimensionality; i++) {
                 if(index == i || (tmp_dimension[index + 1] == '1' && index == i)) {
@@ -68,13 +70,13 @@ int main(int argc, char *argv[]) {
 
 
         } while(actual_dimension[index] == tmp_dimension[index]);
-        // printf("\nindex: %d act: %s tmp: %s\n", index, actual_dimension, tmp_dimension);
         fprintf(pFile2, "%s", tmp_dimension);
     }
 
     fclose(pFile);
     fclose(pFile2);
     free(actual_dimension);
+    free(tmp_dimension);
 
     return EXIT_SUCCESS;
 }

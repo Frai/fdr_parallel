@@ -452,8 +452,8 @@ int main(int argc, const char **argv) {
     fscanf(pfSize, "%lf", &size);
     fclose(pfSize);
 
-    logR = (double *) malloc((m.size() + 1) * sizeof(double));
-    logSqR = (double *) malloc((m.size() + 1) * sizeof(double));
+    logR = (double *) malloc((m.size() + 2) * sizeof(double));
+    logSqR = (double *) malloc((m.size() + 2) * sizeof(double));
 
     int i = 0;
     aux = size * (size - 1.0) / 2.0;
@@ -468,18 +468,23 @@ int main(int argc, const char **argv) {
         aux = rit->second;
     }
 
-    if(aux >= 1) {
-        logR[i] = log(1.0 / pow(2, i + 1));
-        logSqR[i] = log(aux);
-        cout << logR[i] << " " << logSqR[i] << "\n";
-    }
+    logR[i] = log(1.0 / pow(2, i + 1));
+    logSqR[i] = log(aux);
+    cout << logR[i] << " " << logSqR[i] << "\n";
+
+    //if(aux != 0) {
+    //    i++;
+    //    logR[i] = log(1.0 / pow(2, i + 1));
+    //    logSqR[i] = 0;
+    //    cout << logR[i] << " " << logSqR[i] << "\n";
+   // }
+
     maxR = logR[i];
 
-
-    NewFractCalc (m.size() + 2, logR, logSqR, minLSE, &aMin, &bMin, &error);
+    NewFractCalc (m.size() + 3, logR, logSqR, minLSE, &aMin, &bMin, &error);
 
     if(aMin == 0 && bMin == 0) {
-        FractCalc(m.size() + 1, logR, logSqR, minLSE, minLen, &aMin, &bMin, &aFirst, &bFirst, &error);
+        FractCalc(m.size() + 2, logR, logSqR, minLSE, minLen, &aMin, &bMin, &aFirst, &bFirst, &error);
     }
 
     cout << "Dimension: " << dimensions_str << " " << dimensions_tmp_str << "\n";

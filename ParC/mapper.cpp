@@ -43,12 +43,16 @@ int main(int argc, char **argv) {
     fclose(dimensionality);
     actualNumberOfDimensions = numberOfDimensions;
 
-    FILE * dimensions_file = fopen("dimensions_tmp", "r");
+    FILE * dimensions_file = fopen("dimensions", "r");
     char * dimensions = (char *) malloc((numberOfDimensions + 1) * sizeof(char));
     fscanf(dimensions_file, "%s", dimensions);
 
+    FILE * dimensions_file_tmp = fopen("dimensions_tmp", "r");
+    char * dimensions_tmp = (char *) malloc((numberOfDimensions + 1) * sizeof(char));
+    fscanf(dimensions_file_tmp, "%s", dimensions_tmp);
+
     for(int i = 0; i < numberOfDimensions; i++) {
-        if(dimensions[i] == '1') {
+        if(dimensions[i] == '1' || dimensions_tmp[i] == '1') {
             actualNumberOfDimensions--;
         }
     }
@@ -57,8 +61,6 @@ int main(int argc, char **argv) {
     if(H < 2) {
         cout << "Error: MrCC needs at least two resolution levels (H >= 2) to perform the clustering process.";
     } // end if
-
-    fprintf(stderr, "----- MAPPER OUTPUT -----\n");
 
     // reads objects from the source database
     int numberOfObjects = 0;
@@ -75,7 +77,7 @@ int main(int argc, char **argv) {
         point[0] = '\0';
 
         for(int i = 0; i < numberOfDimensions; i++) {
-            if(dimensions[i] == '1') {
+            if(dimensions[i] == '1' || dimensions_tmp[i] == '1') {
                 cin >> num;
             } else {
                 cin >> num; // point values
@@ -84,7 +86,6 @@ int main(int argc, char **argv) {
             }
         }
 
-        // fprintf(stderr, "point: %s\n", point);
         strcat(point, "\n");
         fputs(point, database);
 
@@ -113,6 +114,8 @@ int main(int argc, char **argv) {
 
     free(dimensions);
     fclose(dimensions_file);
+    free(dimensions_tmp);
+    fclose(dimensions_file_tmp);
 
     return 0; // success
 }
