@@ -3,7 +3,7 @@
 #base_path=/home/antoniocf/fdr_parallel # complete path to the 'BoW_package' folder
 hadoop_bin=/Users/frai/Programs/hadoop-2.4.1/bin/hadoop # path to the hadoop executable
 base_path=/Users/frai/Programs/fdr_parallel # complete path to the 'BoW_package' folder
-r=10 # number of reducers to be used
+r=10 # number  of reducers to be used
 
 # dataset 1 configuration
 dataset=synthetic_hadoop.dat # dataset name
